@@ -251,7 +251,7 @@ namespace Oxide.Game.ReignOfKings
             };
 
             Interface.Oxide.ServerConsole.Status3Left = () => $"{GameClock.Instance.TimeOfDayAsClockString()}, Weather: {Weather.Instance.CurrentWeather}";
-            Interface.Oxide.ServerConsole.Status3Right = () => $"Oxide {OxideMod.Version} for {GameInfo.VersionString} ({GameInfo.VersionName})";
+            Interface.Oxide.ServerConsole.Status3Right = () => $"Oxide.ReignOfKings {AssemblyVersion} for {GameInfo.VersionString} ({GameInfo.VersionName})";
             Interface.Oxide.ServerConsole.Status3RightColor = ConsoleColor.Yellow;
         }
 
