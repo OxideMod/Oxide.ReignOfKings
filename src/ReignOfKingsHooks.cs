@@ -1,7 +1,6 @@
 ﻿using CodeHatch.Common;
 using CodeHatch.Engine.Common;
 using CodeHatch.Engine.Networking;
-using CodeHatch.Networking.Events.Players;
 using Oxide.Core;
 using Oxide.Core.Plugins;
 using System;
@@ -112,13 +111,14 @@ namespace Oxide.Game.ReignOfKings
         /// <summary>
         /// Called when the player sends a message
         /// </summary>
-        /// <param name="evt"></param>
+        /// <param name="player"></param>
+        /// <param name="message"></param>
         /// <returns></returns>
         [HookMethod("OnPlayerChat")]
-        private object OnPlayerChat(PlayerMessageEvent evt)
+        private object OnPlayerChat(Player player, string message)
         {
-            return Interface.Call("OnUserChat", evt.Player.IPlayer, evt.Message);
             // Call universal hook
+            return Interface.Call("OnUserChat", player.IPlayer, message);
         }
 
         /// <summary>
@@ -182,23 +182,23 @@ namespace Oxide.Game.ReignOfKings
         /// <summary>
         /// Called when the player is spawning
         /// </summary>
-        /// <param name="evt"></param>
+        /// <param name="player"></param>
         [HookMethod("OnPlayerSpawn")]
-        private void OnPlayerSpawn(PlayerFirstSpawnEvent evt)
+        private void OnPlayerSpawn(Player player)
         {
-            Interface.Call("OnUserSpawn", evt.Player.IPlayer);
             // Call universal hook
+            Interface.Call("OnUserSpawn", player.IPlayer);
         }
 
         /// <summary>
         /// Called when the player is respawning
         /// </summary>
-        /// <param name="evt"></param>
+        /// <param name="player"></param>
         [HookMethod("OnPlayerRespawn")]
-        private void OnPlayerRespawn(PlayerRespawnEvent evt)
+        private void OnPlayerRespawn(Player player)
         {
-            Interface.Call("OnUserRespawn", evt.Player.IPlayer);
             // Call universal hook
+            Interface.Call("OnUserRespawn", player.IPlayer);
         }
 
         #endregion Player Hooks
