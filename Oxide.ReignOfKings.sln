@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2008
 MinimumVisualStudioVersion = 15.0
-Project("{583592A6-E812-4631-B950-25C8DDB5056D}") = "Oxide.ReignOfKings", "Oxide.ReignOfKings\Oxide.ReignOfKings.csproj", "{E6788452-90F2-4388-A9BC-67D7EBBFF8CD}"
+Project("{583592A6-E812-4631-B950-25C8DDB5056D}") = "Oxide.ReignOfKings", "src\Oxide.ReignOfKings.csproj", "{E6788452-90F2-4388-A9BC-67D7EBBFF8CD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
