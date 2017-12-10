@@ -291,7 +291,7 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
         /// <param name="args"></param>
         public void Command(string command, params object[] args)
         {
-            CommandManager.ExecuteCommand(steamId, $"{command} {string.Join(" ", Array.ConvertAll(args, x => x.ToString()))}");
+            CommandManager.ExecuteCommand(steamId, $"/{command} {string.Join(" ", Array.ConvertAll(args, x => x.ToString()))}");
         }
 
         #endregion Chat and Commands
