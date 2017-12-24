@@ -1206,6 +1206,32 @@
             "BaseHookName": null,
             "HookCategory": "Item"
           }
+        },
+        {
+          "Type": "Simple",
+          "Hook": {
+            "InjectionIndex": 0,
+            "ReturnBehavior": 1,
+            "ArgumentBehavior": 2,
+            "ArgumentString": null,
+            "HookTypeName": "Simple",
+            "Name": "OnPlayerUnlock",
+            "HookName": "OnPlayerUnlock",
+            "AssemblyName": "Assembly-CSharp.dll",
+            "TypeName": "CodeHatch.Thrones.Lockpick",
+            "Flagged": false,
+            "Signature": {
+              "Exposure": 0,
+              "Name": "OnUnlock",
+              "ReturnType": "System.Void",
+              "Parameters": [
+                "CodeHatch.Thrones.SocialSystem.Objects.ObjectUnlockEvent"
+              ]
+            },
+            "MSILHash": "fAzaM1o3fsjwy0w9SQseiwBiYMcZ5mA/DYF7unvNyPo=",
+            "BaseHookName": null,
+            "HookCategory": "Player"
+          }
         }
       ],
       "Modifiers": [
