@@ -8,7 +8,7 @@
         {
           "Type": "InitOxide",
           "Hook": {
-            "InjectionIndex": 115,
+            "InjectionIndex": 119,
             "HookTypeName": "Initialize Oxide",
             "Name": "InitOxide [internal]",
             "HookName": "InitOxide",
@@ -21,7 +21,7 @@
               "ReturnType": "System.Void",
               "Parameters": []
             },
-            "MSILHash": "c4XRIhbbvQa35VcRD3K+rPyE6oMvxUTZ/3oEktrc8Hg=",
+            "MSILHash": "OXhlhbq1/NjzKdwFmt4J7X19h2HGpSNt9qzKifzd6WI=",
             "BaseHookName": null,
             "HookCategory": "Server"
           }
@@ -45,7 +45,7 @@
               "ReturnType": "System.Void",
               "Parameters": []
             },
-            "MSILHash": "jgYWcBZ1H6BArjHhKcReP9wM+3mm0HYGvCXUnMpy4g8=",
+            "MSILHash": "3FdaK/LrDJA3JUEb0AvPHPpMYZ0cljrTcx5ZhIn9LJs=",
             "BaseHookName": null,
             "HookCategory": "Server"
           }
@@ -171,7 +171,7 @@
                 "CodeHatch.Networking.Events.Players.PlayerMessageEvent"
               ]
             },
-            "MSILHash": "uplzRTgSVNtJmrq5GEstjC82CkO6wcpFUL8Ix9hZV/I=",
+            "MSILHash": "2xh/Vu5nFAund2jUeJOkgfS22jXYDf+qrWBHzj7TaZo=",
             "BaseHookName": null,
             "HookCategory": "Player"
           }
@@ -614,7 +614,7 @@
                 "CodeHatch.Networking.Events.Players.PlayerMessageEvent"
               ]
             },
-            "MSILHash": "uplzRTgSVNtJmrq5GEstjC82CkO6wcpFUL8Ix9hZV/I=",
+            "MSILHash": "2xh/Vu5nFAund2jUeJOkgfS22jXYDf+qrWBHzj7TaZo=",
             "BaseHookName": "OnPlayerChat [guild]",
             "HookCategory": "Player"
           }
@@ -1205,6 +1205,32 @@
             "MSILHash": "rSFGhUeknwIfIvyf3K7TDYPY9O1JNhiwxG5TgIh0DVw=",
             "BaseHookName": null,
             "HookCategory": "Item"
+          }
+        },
+        {
+          "Type": "Simple",
+          "Hook": {
+            "InjectionIndex": 0,
+            "ReturnBehavior": 1,
+            "ArgumentBehavior": 2,
+            "ArgumentString": null,
+            "HookTypeName": "Simple",
+            "Name": "OnPlayerUnlock",
+            "HookName": "OnPlayerUnlock",
+            "AssemblyName": "Assembly-CSharp.dll",
+            "TypeName": "CodeHatch.Thrones.Lockpick",
+            "Flagged": false,
+            "Signature": {
+              "Exposure": 0,
+              "Name": "OnUnlock",
+              "ReturnType": "System.Void",
+              "Parameters": [
+                "CodeHatch.Thrones.SocialSystem.Objects.ObjectUnlockEvent"
+              ]
+            },
+            "MSILHash": "fAzaM1o3fsjwy0w9SQseiwBiYMcZ5mA/DYF7unvNyPo=",
+            "BaseHookName": null,
+            "HookCategory": "Player"
           }
         }
       ],
