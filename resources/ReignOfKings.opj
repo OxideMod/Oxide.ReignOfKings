@@ -1232,6 +1232,58 @@
             "BaseHookName": null,
             "HookCategory": "Player"
           }
+        },
+        {
+          "Type": "Simple",
+          "Hook": {
+            "InjectionIndex": 15,
+            "ReturnBehavior": 1,
+            "ArgumentBehavior": 2,
+            "ArgumentString": null,
+            "HookTypeName": "Simple",
+            "Name": "OnKingDeath",
+            "HookName": "OnKingDeath",
+            "AssemblyName": "Assembly-CSharp.dll",
+            "TypeName": "CodeHatch.Thrones.AncientThrone.AncientThroneListener",
+            "Flagged": false,
+            "Signature": {
+              "Exposure": 0,
+              "Name": "OnPlayerDeath",
+              "ReturnType": "System.Void",
+              "Parameters": [
+                "CodeHatch.Networking.Events.Players.PlayerDeathEvent"
+              ]
+            },
+            "MSILHash": "3Y2PQPBzqHBy20oWcWMTElt2GuptTTu81ZEbn+CDbAI=",
+            "BaseHookName": null,
+            "HookCategory": "Throne"
+          }
+        },
+        {
+          "Type": "Simple",
+          "Hook": {
+            "InjectionIndex": 15,
+            "ReturnBehavior": 1,
+            "ArgumentBehavior": 2,
+            "ArgumentString": null,
+            "HookTypeName": "Simple",
+            "Name": "OnKingSleeperDeath",
+            "HookName": "OnKingSleeperDeath",
+            "AssemblyName": "Assembly-CSharp.dll",
+            "TypeName": "CodeHatch.Thrones.AncientThrone.AncientThroneListener",
+            "Flagged": false,
+            "Signature": {
+              "Exposure": 0,
+              "Name": "OnSleeperDeath",
+              "ReturnType": "System.Void",
+              "Parameters": [
+                "CodeHatch.Networking.Events.Entities.Players.SleeperDeathEvent"
+              ]
+            },
+            "MSILHash": "uKfEe1SiY9wqEC8QdtguMaahh0k58U34zpWqzlV8M9Y=",
+            "BaseHookName": null,
+            "HookCategory": "Throne"
+          }
         }
       ],
       "Modifiers": [
