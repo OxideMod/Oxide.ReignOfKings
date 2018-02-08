@@ -1284,6 +1284,58 @@
             "BaseHookName": null,
             "HookCategory": "Throne"
           }
+        },
+        {
+          "Type": "Simple",
+          "Hook": {
+            "InjectionIndex": 116,
+            "ReturnBehavior": 1,
+            "ArgumentBehavior": 2,
+            "ArgumentString": null,
+            "HookTypeName": "Simple",
+            "Name": "OnGuildInvite",
+            "HookName": "OnGuildInvite",
+            "AssemblyName": "Assembly-CSharp.dll",
+            "TypeName": "CodeHatch.Thrones.SocialSystem.ServerSupplier",
+            "Flagged": false,
+            "Signature": {
+              "Exposure": 0,
+              "Name": "OnGuildInvite",
+              "ReturnType": "System.Void",
+              "Parameters": [
+                "CodeHatch.Thrones.SocialSystem.GuildInvitationEvent"
+              ]
+            },
+            "MSILHash": "0HUfxRE4gQBPjnoPM/T5y8nU4oGZJ2OJWMg4kH9aLTE=",
+            "BaseHookName": null,
+            "HookCategory": "Guild"
+          }
+        },
+        {
+          "Type": "Simple",
+          "Hook": {
+            "InjectionIndex": 36,
+            "ReturnBehavior": 1,
+            "ArgumentBehavior": 2,
+            "ArgumentString": null,
+            "HookTypeName": "Simple",
+            "Name": "OnGuildInvitationAccept",
+            "HookName": "OnGuildInvitationAccept",
+            "AssemblyName": "Assembly-CSharp.dll",
+            "TypeName": "CodeHatch.Thrones.SocialSystem.ServerSupplier",
+            "Flagged": false,
+            "Signature": {
+              "Exposure": 0,
+              "Name": "OnInvitationAccept",
+              "ReturnType": "System.Void",
+              "Parameters": [
+                "CodeHatch.Thrones.SocialSystem.GuildInvitationAcceptEvent"
+              ]
+            },
+            "MSILHash": "x6X121SlpWSLobTlaVCc0VKrgtTzhTycGkBri8PRv/g=",
+            "BaseHookName": null,
+            "HookCategory": "Guild"
+          }
         }
       ],
       "Modifiers": [
