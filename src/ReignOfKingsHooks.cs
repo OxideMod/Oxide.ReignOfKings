@@ -113,14 +113,21 @@ namespace Oxide.Game.ReignOfKings
         /// Called when the player sends a message
         /// </summary>
         /// <param name="evt"></param>
-        /// <param name="player"></param>
-        /// <param name="message"></param>
         /// <returns></returns>
-        [HookMethod("OnPlayerChat")]
-        private object OnPlayerChat(PlayerMessageEvent evt)
+        [HookMethod("IOnPlayerChat")]
+        private object IOnPlayerChat(PlayerMessageEvent evt)
         {
-            // Call universal hook
-            return Interface.Call("OnUserChat", evt.Player.IPlayer, evt.Message);
+            // Call game and covalence hooks
+            var chatSpecific = Interface.Call("OnPlayerChat", evt);
+            var chatCovalence = Interface.Call("OnUserChat", evt.Player.IPlayer, evt.Message);
+            if (chatSpecific != null || chatCovalence != null)
+            {
+                // Cancel chat message event
+                evt.Cancel();
+                return true;
+            }
+
+            return null;
         }
 
         /// <summary>

@@ -158,8 +158,8 @@
             "ArgumentBehavior": 2,
             "ArgumentString": "",
             "HookTypeName": "Simple",
-            "Name": "OnPlayerChat [guild]",
-            "HookName": "OnPlayerChat",
+            "Name": "IOnPlayerChat [guild, internal]]",
+            "HookName": "IOnPlayerChat",
             "AssemblyName": "Assembly-CSharp.dll",
             "TypeName": "CodeHatch.Networking.Events.Listeners.PlayerListener",
             "Flagged": false,
@@ -601,8 +601,8 @@
             "ArgumentBehavior": 2,
             "ArgumentString": null,
             "HookTypeName": "Simple",
-            "Name": "OnPlayerChat [player]",
-            "HookName": "OnPlayerChat",
+            "Name": "IOnPlayerChat [player, internal]",
+            "HookName": "IOnPlayerChat",
             "AssemblyName": "Assembly-CSharp.dll",
             "TypeName": "CodeHatch.Networking.Events.Listeners.PlayerListener",
             "Flagged": false,
@@ -615,7 +615,7 @@
               ]
             },
             "MSILHash": "2xh/Vu5nFAund2jUeJOkgfS22jXYDf+qrWBHzj7TaZo=",
-            "BaseHookName": "OnPlayerChat [guild]",
+            "BaseHookName": "IOnPlayerChat [guild, internal]]",
             "HookCategory": "Player"
           }
         },
