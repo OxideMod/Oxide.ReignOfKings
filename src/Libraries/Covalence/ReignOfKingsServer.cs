@@ -38,9 +38,12 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
             {
                 try
                 {
-                    if (address != null) return address;
+                    if (address != null)
+                    {
+                        return address;
+                    }
 
-                    var webClient = new WebClient();
+                    WebClient webClient = new WebClient();
                     IPAddress.TryParse(webClient.DownloadString("http://api.ipify.org"), out address);
                     return address;
                 }
@@ -113,7 +116,10 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
         public void Ban(string id, string reason, TimeSpan duration = default(TimeSpan))
         {
             // Check if already banned
-            if (IsBanned(id)) return;
+            if (IsBanned(id))
+            {
+                return;
+            }
 
             // Ban and kick user
             Server.Ban(ulong.Parse(id), (int)duration.TotalSeconds, reason);
@@ -143,7 +149,10 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
         public void Unban(string id)
         {
             // Check if unbanned already
-            if (!IsBanned(id)) return;
+            if (!IsBanned(id))
+            {
+                return;
+            }
 
             // Set to unbanned
             Server.Unban(ulong.Parse(id));
@@ -161,8 +170,13 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
         /// <param name="args"></param>
         public void Broadcast(string message, string prefix, params object[] args)
         {
+            if (string.IsNullOrEmpty(message))
+            {
+                return;
+            }
+
             message = args.Length > 0 ? string.Format(Formatter.ToRoKAnd7DTD(message), args) : Formatter.ToRoKAnd7DTD(message);
-            var formatted = prefix != null ? $"{prefix} {message}" : message;
+            string formatted = prefix != null ? $"{prefix} {message}" : message;
             Server.BroadcastMessage(formatted);
         }
 

@@ -1,5 +1,4 @@
-﻿using CodeHatch.Build;
-using CodeHatch.Common;
+﻿using CodeHatch.Common;
 using CodeHatch.Engine.Administration;
 using CodeHatch.Engine.Core.Commands;
 using CodeHatch.Engine.Networking;
@@ -191,10 +190,17 @@ namespace Oxide.Game.ReignOfKings
         {
             CSharpPluginLoader.PluginReferences.UnionWith(DefaultReferences);
 
-            if (!Interface.Oxide.CheckConsole() || !Interface.Oxide.EnableConsole()) return;
+            if (!Interface.Oxide.CheckConsole() || !Interface.Oxide.EnableConsole())
+            {
+                return;
+            }
 
-            var socketAdminConsole = UnityEngine.Object.FindObjectOfType<SocketAdminConsole>();
-            if (socketAdminConsole._server.Clients.Count > 0) return;
+            SocketAdminConsole socketAdminConsole = UnityEngine.Object.FindObjectOfType<SocketAdminConsole>();
+            if (socketAdminConsole._server.Clients.Count > 0)
+            {
+                return;
+            }
+
             socketAdminConsole.enabled = false;
 
             Application.logMessageReceived += HandleLog;
@@ -205,50 +211,70 @@ namespace Oxide.Game.ReignOfKings
             Logger.ExceptionLogged += HandleLog;
             Application.logMessageReceived += (message, stackTrace, type) =>
             {
-                if (type == LogType.Exception) Interface.Oxide.LogDebug(message + "\n" + stackTrace);
+                if (type == LogType.Exception)
+                {
+                    Interface.Oxide.LogDebug(message + "\n" + stackTrace);
+                }
             };
 
             Interface.Oxide.ServerConsole.Input += ServerConsoleOnInput;
             Interface.Oxide.ServerConsole.Completion = input =>
             {
-                if (string.IsNullOrEmpty(input)) return null;
-                if (input.StartsWith("/")) input = input.Remove(0, 1);
+                if (string.IsNullOrEmpty(input))
+                {
+                    return null;
+                }
+
+                if (input.StartsWith("/"))
+                {
+                    input = input.Remove(0, 1);
+                }
+
                 return CommandManager.RegisteredCommands.Keys.Where(c => c.StartsWith(input.ToLower())).ToArray();
             };
         }
 
         internal static void ServerConsole()
         {
-            if (Interface.Oxide.ServerConsole == null) return;
+            if (Interface.Oxide.ServerConsole == null)
+            {
+                return;
+            }
 
             Interface.Oxide.ServerConsole.Title = () => $"{Server.PlayerCount} | {DedicatedServerBypass.Settings.ServerName}";
 
             Interface.Oxide.ServerConsole.Status1Left = () => DedicatedServerBypass.Settings.ServerName;
             Interface.Oxide.ServerConsole.Status1Right = () =>
             {
-                var time = TimeSpan.FromSeconds(Time.realtimeSinceStartup);
-                var uptime = $"{time.TotalHours:00}h{time.Minutes:00}m{time.Seconds:00}s".TrimStart(' ', 'd', 'h', 'm', 's', '0');
+                TimeSpan time = TimeSpan.FromSeconds(Time.realtimeSinceStartup);
+                string uptime = $"{time.TotalHours:00}h{time.Minutes:00}m{time.Seconds:00}s".TrimStart(' ', 'd', 'h', 'm', 's', '0');
                 return $"{Mathf.RoundToInt(1f / Time.smoothDeltaTime)}fps, {uptime}";
             };
 
             Interface.Oxide.ServerConsole.Status2Left = () =>
             {
-                var players = $"{Server.PlayerCount}/{Server.PlayerLimit} players";
-                var sleepers = CodeHatch.StarForge.Sleeping.PlayerSleeperObject.AllSleeperObjects.Count;
-                var entities = CodeHatch.Engine.Core.Cache.Entity.GetAll().Count;
+                string players = $"{Server.PlayerCount}/{Server.PlayerLimit} players";
+                int sleepers = CodeHatch.StarForge.Sleeping.PlayerSleeperObject.AllSleeperObjects.Count;
+                int entities = CodeHatch.Engine.Core.Cache.Entity.GetAll().Count;
                 return $"{players}, {sleepers + (sleepers.Equals(1) ? " sleeper" : " sleepers")}, {entities + (entities.Equals(1) ? " entity" : " entities")}";
             };
             Interface.Oxide.ServerConsole.Status2Right = () =>
             {
-                if (uLink.NetworkTime.serverTime <= 0) return "not connected";
+                if (uLink.NetworkTime.serverTime <= 0)
+                {
+                    return "not connected";
+                }
 
                 double bytesReceived = 0;
                 double bytesSent = 0;
-                foreach (var player in Server.AllPlayers)
+                foreach (Player player in Server.AllPlayers)
                 {
-                    if (!player.Connection.IsConnected) continue;
+                    if (!player.Connection.IsConnected)
+                    {
+                        continue;
+                    }
 
-                    var statistics = player.Connection.Statistics;
+                    ConnectionStatistics statistics = player.Connection.Statistics;
                     bytesReceived += statistics.BytesReceivedPerSecond;
                     bytesSent += statistics.BytesSentPerSecond;
                 }
@@ -263,11 +289,22 @@ namespace Oxide.Game.ReignOfKings
         private static void ServerConsoleOnInput(string input)
         {
             input = input.Trim();
-            if (!input.StartsWith("/")) input = "/" + input;
+            if (!input.StartsWith("/"))
+            {
+                input = "/" + input;
+            }
+
             Console.Messages.Clear();
-            if (!CommandManager.ExecuteCommand(Server.Instance.ServerPlayer.Id, input)) return;
-            var output = Console.CurrentOutput.TrimEnd('\n', '\r');
-            if (!string.IsNullOrEmpty(output)) Interface.Oxide.ServerConsole.AddMessage(output);
+            if (!CommandManager.ExecuteCommand(Server.Instance.ServerPlayer.Id, input))
+            {
+                return;
+            }
+
+            string output = Console.CurrentOutput.TrimEnd('\n', '\r');
+            if (!string.IsNullOrEmpty(output))
+            {
+                Interface.Oxide.ServerConsole.AddMessage(output);
+            }
         }
 
         private static void HandleLog(Exception message, object context, Type type)
@@ -282,10 +319,13 @@ namespace Oxide.Game.ReignOfKings
 
         private static void HandleLog(string message, string stackTrace, LogType type)
         {
-            if (string.IsNullOrEmpty(message) || Filter.Any(message.Contains)) return;
+            if (string.IsNullOrEmpty(message) || Filter.Any(message.Contains))
+            {
+                return;
+            }
 
-            var color = ConsoleColor.Gray;
-            var remoteType = "generic";
+            ConsoleColor color = ConsoleColor.Gray;
+            string remoteType = "generic";
 
             if (type == LogType.Warning)
             {
