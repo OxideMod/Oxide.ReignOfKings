@@ -100,21 +100,26 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
             command = command.ToLowerInvariant().Trim();
 
             // Setup a new Covalence command
-            var newCommand = new RegisteredCommand(plugin, command, callback);
+            RegisteredCommand newCommand = new RegisteredCommand(plugin, command, callback);
 
             // Check if the command can be overridden
             if (!CanOverrideCommand(command))
+            {
                 throw new CommandAlreadyExistsException(command);
+            }
 
             // Check if command already exists in another Covalence plugin
             RegisteredCommand cmd;
             if (registeredCommands.TryGetValue(command, out cmd))
             {
-                if (cmd.OriginalCallback != null) newCommand.OriginalCallback = cmd.OriginalCallback;
+                if (cmd.OriginalCallback != null)
+                {
+                    newCommand.OriginalCallback = cmd.OriginalCallback;
+                }
 
-                var previousPluginName = cmd.Source?.Name ?? "an unknown plugin";
-                var newPluginName = plugin?.Name ?? "An unknown plugin";
-                var message = $"{newPluginName} has replaced the '{command}' command previously registered by {previousPluginName}";
+                string previousPluginName = cmd.Source?.Name ?? "an unknown plugin";
+                string newPluginName = plugin?.Name ?? "An unknown plugin";
+                string message = $"{newPluginName} has replaced the '{command}' command previously registered by {previousPluginName}";
                 Interface.Oxide.LogWarning(message);
             }
 
@@ -122,11 +127,14 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
             Command.ChatCommand chatCommand;
             if (cmdlib.ChatCommands.TryGetValue(command, out chatCommand))
             {
-                if (chatCommand.OriginalCallback != null) newCommand.OriginalCallback = chatCommand.OriginalCallback;
+                if (chatCommand.OriginalCallback != null)
+                {
+                    newCommand.OriginalCallback = chatCommand.OriginalCallback;
+                }
 
-                var previousPluginName = chatCommand.Plugin?.Name ?? "an unknown plugin";
-                var newPluginName = plugin?.Name ?? "An unknown plugin";
-                var message = $"{newPluginName} has replaced the '{command}' chat command previously registered by {previousPluginName}";
+                string previousPluginName = chatCommand.Plugin?.Name ?? "an unknown plugin";
+                string newPluginName = plugin?.Name ?? "An unknown plugin";
+                string message = $"{newPluginName} has replaced the '{command}' chat command previously registered by {previousPluginName}";
                 Interface.Oxide.LogWarning(message);
 
                 cmdlib.ChatCommands.Remove(command);
@@ -135,12 +143,16 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
             // Check if command is a vanilla Reign of Kings command
             if (CommandManager.RegisteredCommands.ContainsKey(command))
             {
-                if (newCommand.OriginalCallback == null) newCommand.OriginalCallback = CommandManager.RegisteredCommands[command];
+                if (newCommand.OriginalCallback == null)
+                {
+                    newCommand.OriginalCallback = CommandManager.RegisteredCommands[command];
+                }
+
                 CommandManager.RegisteredCommands.Remove(command);
                 if (cmd == null && chatCommand == null)
                 {
-                    var newPluginName = plugin?.Name ?? "An unknown plugin";
-                    var message =
+                    string newPluginName = plugin?.Name ?? "An unknown plugin";
+                    string message =
                         $"{newPluginName} has replaced the '{command}' command previously registered by Reign of Kings";
                     Interface.Oxide.LogWarning(message);
                 }
@@ -157,8 +169,12 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
         private void HandleCommand(CommandInfo cmdInfo)
         {
             RegisteredCommand cmd;
-            if (!registeredCommands.TryGetValue(cmdInfo.Label.ToLowerInvariant(), out cmd)) return;
-            var iplayer = reignOfKingsCovalence.PlayerManager.FindPlayerById(cmdInfo.PlayerId.ToString()) ?? consolePlayer;
+            if (!registeredCommands.TryGetValue(cmdInfo.Label.ToLowerInvariant(), out cmd))
+            {
+                return;
+            }
+
+            IPlayer iplayer = reignOfKingsCovalence.PlayerManager.FindPlayerById(cmdInfo.PlayerId.ToString()) ?? consolePlayer;
             HandleChatMessage(iplayer, $"/{cmdInfo.Label} {string.Join(" ", cmdInfo.Args)}");
         }
 
@@ -174,19 +190,29 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
         public void UnregisterCommand(string command, Plugin plugin)
         {
             RegisteredCommand cmd;
-            if (!registeredCommands.TryGetValue(command, out cmd)) return;
+            if (!registeredCommands.TryGetValue(command, out cmd))
+            {
+                return;
+            }
 
             // Check if the command belongs to the plugin
-            if (plugin != cmd.Source) return;
+            if (plugin != cmd.Source)
+            {
+                return;
+            }
 
             // Remove the chat command
             registeredCommands.Remove(command);
 
             // If this was originally a vanilla Reign of Kings command then restore it, otherwise remove it
             if (cmd.OriginalCallback != null)
+            {
                 CommandManager.RegisteredCommands[cmd.Command] = cmd.OriginalCallback;
+            }
             else
+            {
                 CommandManager.RegisteredCommands.Remove(cmd.Command);
+            }
         }
 
         #endregion Command Unregistration
@@ -222,13 +248,21 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
         {
             RegisteredCommand cmd;
             if (registeredCommands.TryGetValue(command, out cmd))
+            {
                 if (cmd.Source.IsCorePlugin)
+                {
                     return false;
+                }
+            }
 
             Command.ChatCommand chatCommand;
             if (cmdlib.ChatCommands.TryGetValue(command, out chatCommand))
+            {
                 if (chatCommand.Plugin.IsCorePlugin)
+                {
                     return false;
+                }
+            }
 
             return !ReignOfKingsCore.RestrictedCommands.Contains(command);
         }

@@ -16,12 +16,12 @@ namespace Oxide.Plugins
 
         public override void HandleAddedToManager(PluginManager manager)
         {
-            foreach (var field in GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance))
+            foreach (FieldInfo field in GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance))
             {
-                var attributes = field.GetCustomAttributes(typeof(OnlinePlayersAttribute), true);
+                object[] attributes = field.GetCustomAttributes(typeof(OnlinePlayersAttribute), true);
                 if (attributes.Length > 0)
                 {
-                    var pluginField = new PluginFieldInfo(this, field);
+                    PluginFieldInfo pluginField = new PluginFieldInfo(this, field);
                     if (pluginField.GenericArguments.Length != 2 || pluginField.GenericArguments[0] != typeof(Player))
                     {
                         Puts($"The {field.Name} field is not a Hash with the player key! (online players will not be tracked)");
@@ -46,11 +46,15 @@ namespace Oxide.Plugins
                 }
             }
 
-            foreach (var method in GetType().GetMethods(BindingFlags.NonPublic | BindingFlags.Instance))
+            foreach (MethodInfo method in GetType().GetMethods(BindingFlags.NonPublic | BindingFlags.Instance))
             {
-                var attributes = method.GetCustomAttributes(typeof(ChatCommandAttribute), true);
-                if (attributes.Length <= 0) continue;
-                var attribute = attributes[0] as ChatCommandAttribute;
+                object[] attributes = method.GetCustomAttributes(typeof(ChatCommandAttribute), true);
+                if (attributes.Length <= 0)
+                {
+                    continue;
+                }
+
+                ChatCommandAttribute attribute = attributes[0] as ChatCommandAttribute;
                 cmd.AddChatCommand(attribute?.Command, this, method.Name);
             }
 
@@ -65,16 +69,19 @@ namespace Oxide.Plugins
             // Delay removing player until OnPlayerDisconnect has fired in plugin
             NextTick(() =>
             {
-                foreach (var pluginField in onlinePlayerFields) pluginField.Call("Remove", player);
+                foreach (PluginFieldInfo pluginField in onlinePlayerFields)
+                {
+                    pluginField.Call("Remove", player);
+                }
             });
         }
 
         private void AddOnlinePlayer(Player player)
         {
-            foreach (var pluginField in onlinePlayerFields)
+            foreach (PluginFieldInfo pluginField in onlinePlayerFields)
             {
-                var type = pluginField.GenericArguments[1];
-                var onlinePlayer = type.GetConstructor(new[] { typeof(Player) }) == null ? Activator.CreateInstance(type) : Activator.CreateInstance(type, player);
+                Type type = pluginField.GenericArguments[1];
+                object onlinePlayer = type.GetConstructor(new[] { typeof(Player) }) == null ? Activator.CreateInstance(type) : Activator.CreateInstance(type, player);
                 type.GetField("Player").SetValue(onlinePlayer, player);
                 pluginField.Call("Add", player, onlinePlayer);
             }
@@ -95,7 +102,10 @@ namespace Oxide.Plugins
         /// <param name="args"></param>
         protected void PrintToChat(string format, params object[] args)
         {
-            if (Server.PlayerCount >= 1) Server.BroadcastMessage(format, args);
+            if (Server.PlayerCount >= 1)
+            {
+                Server.BroadcastMessage(format, args);
+            }
         }
 
         /// <summary>

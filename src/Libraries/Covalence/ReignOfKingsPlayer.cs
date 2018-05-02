@@ -26,7 +26,10 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
 
         internal ReignOfKingsPlayer(ulong id, string name)
         {
-            if (libPerms == null) libPerms = Interface.Oxide.GetLibrary<Permission>();
+            if (libPerms == null)
+            {
+                libPerms = Interface.Oxide.GetLibrary<Permission>();
+            }
 
             Name = name.Sanitize();
             steamId = id;
@@ -101,7 +104,7 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
         {
             get
             {
-                var sleeper = player?.Entity.Get<ISleeper>();
+                ISleeper sleeper = player?.Entity.Get<ISleeper>();
                 return sleeper != null && sleeper.IsSleeping;
             }
         }
@@ -123,7 +126,10 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
         public void Ban(string reason, TimeSpan duration = default(TimeSpan))
         {
             // Check if already banned
-            if (IsBanned) return;
+            if (IsBanned)
+            {
+                return;
+            }
 
             // Ban and kick user
             Server.Ban(steamId, (int)duration.TotalSeconds, reason);
@@ -155,7 +161,7 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
         /// <param name="amount"></param>
         public void Hurt(float amount)
         {
-            var damage = new Damage(player.CurrentCharacter.Prefab, null)
+            Damage damage = new Damage(player.CurrentCharacter.Prefab, null)
             {
                 Amount = amount,
                 DamageTypes = DamageType.Unknown,
@@ -198,7 +204,7 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
         /// <param name="z"></param>
         public void Teleport(float x, float y, float z)
         {
-            player.Entity.GetOrCreate<CharacterTeleport>().Teleport(new Vector3(x, y, z));
+            player.Entity?.GetOrCreate<CharacterTeleport>().Teleport(new Vector3(x, y, z));
         }
 
         /// <summary>
@@ -213,7 +219,10 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
         public void Unban()
         {
             // Check if unbanned already
-            if (!IsBanned) return;
+            if (!IsBanned)
+            {
+                return;
+            }
 
             // Set to unbanned
             Server.Unban(steamId);
@@ -231,7 +240,7 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
         /// <param name="z"></param>
         public void Position(out float x, out float y, out float z)
         {
-            var pos = player.Entity.Position;
+            Vector3 pos = player.Entity.Position;
             x = pos.x;
             y = pos.y;
             z = pos.z;
@@ -243,7 +252,7 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
         /// <returns></returns>
         public GenericPosition Position()
         {
-            var pos = player.Entity.Position;
+            Vector3 pos = player.Entity.Position;
             return new GenericPosition(pos.x, pos.y, pos.z);
         }
 
@@ -259,8 +268,13 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
         /// <param name="args"></param>
         public void Message(string message, string prefix, params object[] args)
         {
+            if (string.IsNullOrEmpty(message))
+            {
+                return;
+            }
+
             message = args.Length > 0 ? string.Format(Formatter.ToRoKAnd7DTD(message), args) : Formatter.ToRoKAnd7DTD(message);
-            var formatted = prefix != null ? $"{prefix} {message}" : message;
+            string formatted = prefix != null ? $"{prefix} {message}" : message;
             player.SendMessage(formatted);
         }
 

@@ -1,5 +1,6 @@
 ﻿using CodeHatch.Engine.Core.Commands;
 using CodeHatch.Engine.Networking;
+using CodeHatch.Permissions;
 using Oxide.Core;
 using Oxide.Core.Libraries;
 using Oxide.Core.Libraries.Covalence;
@@ -10,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+using Permission = Oxide.Core.Libraries.Permission;
 
 namespace Oxide.Game.ReignOfKings
 {
@@ -32,7 +34,7 @@ namespace Oxide.Game.ReignOfKings
 
             CommandManager.OnRegisterCommand += (attribute) =>
             {
-                foreach (var command in attribute.Aliases.InsertItem(attribute.Name, 0))
+                foreach (string command in attribute.Aliases.InsertItem(attribute.Name, 0))
                 {
                     Command.ChatCommand chatCommand;
                     if (cmdlib.ChatCommands.TryGetValue(command, out chatCommand))
@@ -108,35 +110,53 @@ namespace Oxide.Game.ReignOfKings
             AddCovalenceCommand(new[] { "oxide.version", "o.version" }, "VersionCommand");
 
             // Register messages for localization
-            foreach (var language in Core.Localization.languages) lang.RegisterMessages(language.Value, this, language.Key);
+            foreach (KeyValuePair<string, Dictionary<string, string>> language in Core.Localization.languages)
+            {
+                lang.RegisterMessages(language.Value, this, language.Key);
+            }
         }
 
         [HookMethod("OnPluginLoaded")]
         private void OnPluginLoaded(Plugin plugin)
         {
             // Call OnServerInitialized for hotloaded plugins
-            if (serverInitialized) plugin.CallHook("OnServerInitialized");
+            if (serverInitialized)
+            {
+                plugin.CallHook("OnServerInitialized");
+            }
         }
 
         [HookMethod("OnServerInitialized")]
         private void OnServerInitialized()
         {
-            if (serverInitialized) return;
+            if (serverInitialized)
+            {
+                return;
+            }
 
             // Setup default permission groups
             rokPerms = CodeHatch.Engine.Networking.Server.Permissions;
             if (permission.IsLoaded)
             {
-                var rank = 0;
-                var rokGroups = rokPerms.GetGroups();
-                foreach (var defaultGroup in Interface.Oxide.Config.Options.DefaultGroups)
-                    if (!permission.GroupExists(defaultGroup)) permission.CreateGroup(defaultGroup, defaultGroup, rank++);
+                int rank = 0;
+                List<PermissionGroup> rokGroups = rokPerms.GetGroups();
+                foreach (string defaultGroup in Interface.Oxide.Config.Options.DefaultGroups)
+                {
+                    if (!permission.GroupExists(defaultGroup))
+                    {
+                        permission.CreateGroup(defaultGroup, defaultGroup, rank++);
+                    }
+                }
 
                 permission.RegisterValidate(s =>
                 {
                     ulong temp;
-                    if (!ulong.TryParse(s, out temp)) return false;
-                    var digits = temp == 0 ? 1 : (int)Math.Floor(Math.Log10(temp) + 1);
+                    if (!ulong.TryParse(s, out temp))
+                    {
+                        return false;
+                    }
+
+                    int digits = temp == 0 ? 1 : (int)Math.Floor(Math.Log10(temp) + 1);
                     return digits >= 17;
                 });
 
@@ -181,36 +201,51 @@ namespace Oxide.Game.ReignOfKings
         /// <param name="args"></param>
         private void ParseCommand(string argstr, out string cmd, out string[] args)
         {
-            var arglist = new List<string>();
-            var sb = new StringBuilder();
-            var inlongarg = false;
-            foreach (var c in argstr)
+            List<string> arglist = new List<string>();
+            StringBuilder sb = new StringBuilder();
+            bool inlongarg = false;
+            foreach (char c in argstr)
             {
                 if (c == '"')
                 {
                     if (inlongarg)
                     {
-                        var arg = sb.ToString().Trim();
-                        if (!string.IsNullOrEmpty(arg)) arglist.Add(arg);
+                        string arg = sb.ToString().Trim();
+                        if (!string.IsNullOrEmpty(arg))
+                        {
+                            arglist.Add(arg);
+                        }
+
                         sb = new StringBuilder();
                         inlongarg = false;
                     }
                     else
+                    {
                         inlongarg = true;
+                    }
                 }
                 else if (char.IsWhiteSpace(c) && !inlongarg)
                 {
-                    var arg = sb.ToString().Trim();
-                    if (!string.IsNullOrEmpty(arg)) arglist.Add(arg);
+                    string arg = sb.ToString().Trim();
+                    if (!string.IsNullOrEmpty(arg))
+                    {
+                        arglist.Add(arg);
+                    }
+
                     sb = new StringBuilder();
                 }
                 else
+                {
                     sb.Append(c);
+                }
             }
             if (sb.Length > 0)
             {
-                var arg = sb.ToString().Trim();
-                if (!string.IsNullOrEmpty(arg)) arglist.Add(arg);
+                string arg = sb.ToString().Trim();
+                if (!string.IsNullOrEmpty(arg))
+                {
+                    arglist.Add(arg);
+                }
             }
             if (arglist.Count == 0)
             {
@@ -226,39 +261,67 @@ namespace Oxide.Game.ReignOfKings
         [HookMethod("IOnServerCommand")]
         private object IOnServerCommand(ulong id, string str)
         {
-            if (str.Length == 0) return null;
-            if (Interface.Call("OnServerCommand", str) != null) return true;
+            if (str.Length == 0)
+            {
+                return null;
+            }
+
+            if (Interface.Call("OnServerCommand", str) != null)
+            {
+                return true;
+            }
 
             // Check if command is from the player
-            var player = CodeHatch.Engine.Networking.Server.GetPlayerById(id);
-            if (player == null) return null;
+            Player player = CodeHatch.Engine.Networking.Server.GetPlayerById(id);
+            if (player == null)
+            {
+                return null;
+            }
 
             // Get the full command
-            var message = str.TrimStart('/');
+            string message = str.TrimStart('/');
 
             // Parse it
             string cmd;
             string[] args;
             ParseCommand(message, out cmd, out args);
-            if (cmd == null) return null;
+            if (cmd == null)
+            {
+                return null;
+            }
 
             // Get the covalence player
-            var iplayer = Covalence.PlayerManager.FindPlayerById(id.ToString());
-            if (iplayer == null) return null;
+            IPlayer iplayer = Covalence.PlayerManager.FindPlayerById(id.ToString());
+            if (iplayer == null)
+            {
+                return null;
+            }
 
             // Is the command blocked?
-            var blockedSpecific = Interface.Call("OnPlayerCommand", player, cmd, args);
-            var blockedCovalence = Interface.Call("OnUserCommand", iplayer, cmd, args);
-            if (blockedSpecific != null || blockedCovalence != null) return true;
+            object blockedSpecific = Interface.Call("OnPlayerCommand", player, cmd, args);
+            object blockedCovalence = Interface.Call("OnUserCommand", iplayer, cmd, args);
+            if (blockedSpecific != null || blockedCovalence != null)
+            {
+                return true;
+            }
 
             // Is it a chat command?
-            if (str[0] != '/') return null;
+            if (str[0] != '/')
+            {
+                return null;
+            }
 
             // Is it a covalance command?
-            if (Covalence.CommandSystem.HandleChatMessage(iplayer, str)) return true;
+            if (Covalence.CommandSystem.HandleChatMessage(iplayer, str))
+            {
+                return true;
+            }
 
             // Is it a regular chat command?
-            if (cmdlib.HandleChatCommand(player, cmd, args)) return true;
+            if (cmdlib.HandleChatCommand(player, cmd, args))
+            {
+                return true;
+            }
 
             return null;
         }
@@ -274,7 +337,11 @@ namespace Oxide.Game.ReignOfKings
         /// <returns></returns>
         private bool PermissionsLoaded(IPlayer player)
         {
-            if (permission.IsLoaded) return true;
+            if (permission.IsLoaded)
+            {
+                return true;
+            }
+
             player.Reply(string.Format(lang.GetMessage("PermissionsNotLoaded", this, player.Id), permission.LastException.Message));
             return false;
         }

@@ -3,15 +3,18 @@ using CodeHatch.Engine.Common;
 using CodeHatch.Engine.Networking;
 using CodeHatch.Networking.Events.Players;
 using Oxide.Core;
+using Oxide.Core.Configuration;
+using Oxide.Core.Libraries.Covalence;
 using Oxide.Core.Plugins;
 using System;
+using System.Reflection;
 
 namespace Oxide.Game.ReignOfKings
 {
     /// <summary>
     /// Game hooks and wrappers for the core Reign of Kings plugin
     /// </summary>
-    public partial class ReignOfKingsCore : CSPlugin
+    public partial class ReignOfKingsCore
     {
         #region Server Hooks
 
@@ -23,13 +26,22 @@ namespace Oxide.Game.ReignOfKings
         [HookMethod("IGetTypeFromName")]
         private Type IGetTypeFromName(string fullTypeName)
         {
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                if (assembly is System.Reflection.Emit.AssemblyBuilder) continue;
+                if (assembly is System.Reflection.Emit.AssemblyBuilder)
+                {
+                    continue;
+                }
+
                 try
                 {
-                    foreach (var type in assembly.GetExportedTypes())
-                        if (type.Name == fullTypeName) return type;
+                    foreach (Type type in assembly.GetExportedTypes())
+                    {
+                        if (type.Name == fullTypeName)
+                        {
+                            return type;
+                        }
+                    }
                 }
                 catch
                 {
@@ -47,7 +59,9 @@ namespace Oxide.Game.ReignOfKings
         private void IOnRecalculateHash(FileHasher fileHasher)
         {
             if (fileHasher.FileLocationFromDataPath.Equals("/Managed/Assembly-CSharp.dll"))
+            {
                 fileHasher.FileLocationFromDataPath = "/Managed/Assembly-CSharp_Original.dll";
+            }
         }
 
         /// <summary>
@@ -59,13 +73,13 @@ namespace Oxide.Game.ReignOfKings
         {
             if (fileCounter.FolderLocationFromDataPath.Equals("/Managed/") && fileCounter.Folders.Length != 39)
             {
-                var folders = (string[])FoldersField.GetValue(fileCounter);
+                string[] folders = (string[])FoldersField.GetValue(fileCounter);
                 Array.Resize(ref folders, 39);
                 FoldersField.SetValue(fileCounter, folders);
             }
             else if (fileCounter.FolderLocationFromDataPath.Equals("/../") && fileCounter.Folders.Length != 2)
             {
-                var folders = (string[])FoldersField.GetValue(fileCounter);
+                string[] folders = (string[])FoldersField.GetValue(fileCounter);
                 Array.Resize(ref folders, 2);
                 FoldersField.SetValue(fileCounter, folders);
             }
@@ -83,19 +97,19 @@ namespace Oxide.Game.ReignOfKings
         [HookMethod("IOnUserApprove")]
         private object IOnUserApprove(Player player)
         {
-            var id = player.Id.ToString();
-            var ip = player.Connection.IpAddress;
+            string id = player.Id.ToString();
+            string ip = player.Connection.IpAddress;
 
             // Let covalence know player is joining
             Covalence.PlayerManager.PlayerJoin(player.Id, player.Name); // TODO: Handle this automatically
 
             // Call out and see if we should reject
-            var loginSpecific = Interface.Call("CanClientLogin", player);
-            var loginCovalence = Interface.Call("CanUserLogin", player.Name, id, ip);
-            var canLogin = loginSpecific ?? loginCovalence; // TODO: Fix 'ReignOfKingsCore' hook conflict when both return
+            object loginSpecific = Interface.Call("CanClientLogin", player);
+            object loginCovalence = Interface.Call("CanUserLogin", player.Name, id, ip);
+            object canLogin = loginSpecific ?? loginCovalence; // TODO: Fix 'ReignOfKingsCore' hook conflict when both return
 
             // Check if player can login
-            if (canLogin is string || (canLogin is bool && !(bool)canLogin))
+            if (canLogin is string || canLogin is bool && !(bool)canLogin)
             {
                 // Reject the player with the message
                 player.ShowPopup("Disconnected", canLogin is string ? canLogin.ToString() : "Connection was rejected"); // TODO: Localization
@@ -104,8 +118,8 @@ namespace Oxide.Game.ReignOfKings
             }
 
             // Call the approval hooks
-            var approvedSpecific = Interface.Call("OnUserApprove", player);
-            var approvedCovalence = Interface.Call("OnUserApproved", player.Name, id, ip);
+            object approvedSpecific = Interface.Call("OnUserApprove", player);
+            object approvedCovalence = Interface.Call("OnUserApproved", player.Name, id, ip);
             return approvedSpecific ?? approvedCovalence; // TODO: Fix 'ReignOfKingsCore' hook conflict when both return
         }
 
@@ -118,8 +132,8 @@ namespace Oxide.Game.ReignOfKings
         private object IOnPlayerChat(PlayerMessageEvent evt)
         {
             // Call game and covalence hooks
-            var chatSpecific = Interface.Call("OnPlayerChat", evt);
-            var chatCovalence = Interface.Call("OnUserChat", evt.Player.IPlayer, evt.Message);
+            object chatSpecific = Interface.Call("OnPlayerChat", evt);
+            object chatCovalence = Interface.Call("OnUserChat", evt.Player.IPlayer, evt.Message);
             if (chatSpecific != null || chatCovalence != null)
             {
                 // Cancel chat message event
@@ -139,16 +153,26 @@ namespace Oxide.Game.ReignOfKings
         private void IOnPlayerConnected(Player player)
         {
             // Ignore the server player
-            if (player.Id == 9999999999) return;
+            if (player.Id == 9999999999)
+            {
+                return;
+            }
 
             // Update player's permissions group and name
             if (permission.IsLoaded)
             {
-                var id = player.Id.ToString();
+                string id = player.Id.ToString();
                 permission.UpdateNickname(id, player.Name);
-                var defaultGroups = Interface.Oxide.Config.Options.DefaultGroups;
-                if (!permission.UserHasGroup(id, defaultGroups.Players)) permission.AddUserGroup(id, defaultGroups.Players);
-                if (player.HasPermission("admin") && !permission.UserHasGroup(id, defaultGroups.Administrators)) permission.AddUserGroup(id, defaultGroups.Administrators);
+                OxideConfig.DefaultGroups defaultGroups = Interface.Oxide.Config.Options.DefaultGroups;
+                if (!permission.UserHasGroup(id, defaultGroups.Players))
+                {
+                    permission.AddUserGroup(id, defaultGroups.Players);
+                }
+
+                if (player.HasPermission("admin") && !permission.UserHasGroup(id, defaultGroups.Administrators))
+                {
+                    permission.AddUserGroup(id, defaultGroups.Administrators);
+                }
             }
 
             // Call game-specific hook
@@ -158,7 +182,7 @@ namespace Oxide.Game.ReignOfKings
             Covalence.PlayerManager.PlayerConnected(player);
 
             // Find covalence player
-            var iplayer = Covalence.PlayerManager.FindPlayerById(player.Id.ToString());
+            IPlayer iplayer = Covalence.PlayerManager.FindPlayerById(player.Id.ToString());
             if (iplayer != null)
             {
                 player.IPlayer = iplayer;
@@ -176,7 +200,10 @@ namespace Oxide.Game.ReignOfKings
         private void IOnPlayerDisconnected(Player player)
         {
             // Ignore the server player
-            if (player.Id == 9999999999) return;
+            if (player.Id == 9999999999)
+            {
+                return;
+            }
 
             // Call game-specific hook
             Interface.Call("OnPlayerDisconnected", player);
@@ -192,7 +219,6 @@ namespace Oxide.Game.ReignOfKings
         /// Called when the player is spawning
         /// </summary>
         /// <param name="evt"></param>
-        /// <param name="player"></param>
         [HookMethod("OnPlayerSpawn")]
         private void OnPlayerSpawn(PlayerFirstSpawnEvent evt)
         {
@@ -201,15 +227,25 @@ namespace Oxide.Game.ReignOfKings
         }
 
         /// <summary>
+        /// Called when the player has spawned
+        /// </summary>
+        /// <param name="evt"></param>
+        [HookMethod("OnPlayerSpawned")]
+        private void OnPlayerSpawned(PlayerPreSpawnCompleteEvent evt)
+        {
+            // Call universal hook
+            Interface.Call("OnUserSpawned", evt.Player.IPlayer);
+        }
+
+        /// <summary>
         /// Called when the player is respawning
         /// </summary>
         /// <param name="evt"></param>
-        /// <param name="player"></param>
-        [HookMethod("OnPlayerRespawn")]
+        [HookMethod("OnPlayerRespawn")] // Not being called every time?
         private void OnPlayerRespawn(PlayerRespawnEvent evt)
         {
             // Call universal hook
-            Interface.Call("OnUserRespawn", evt.Player.IPlayer); 
+            Interface.Call("OnUserRespawn", evt.Player.IPlayer);
         }
 
         #endregion Player Hooks
