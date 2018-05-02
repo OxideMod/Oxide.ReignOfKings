@@ -54,8 +54,6 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
                 playerData.Add(id, record);
                 allPlayers.Add(id, new ReignOfKingsPlayer(userId, name));
             }
-
-            ProtoStorage.Save(playerData, "oxide.covalence");
         }
 
         internal void PlayerConnected(Player player)
@@ -65,6 +63,8 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
         }
 
         internal void PlayerDisconnected(Player player) => connectedPlayers.Remove(player.Id.ToString());
+
+        internal void SavePlayerData() => ProtoStorage.Save(playerData, "oxide.covalence");
 
         #region Player Finding
 
