@@ -8,7 +8,6 @@ using Oxide.Core.RemoteConsole;
 using Oxide.Game.ReignOfKings.Libraries;
 using Oxide.Plugins;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
@@ -53,8 +52,9 @@ namespace Oxide.Game.ReignOfKings
         /// <summary>
         /// Default game-specific references for use in plugins
         /// </summary>
-        internal static readonly HashSet<string> DefaultReferences = new HashSet<string>
+        public override string[] DefaultReferences => new[]
         {
+            ""
         };
 
         /// <summary>
