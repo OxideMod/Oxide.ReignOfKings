@@ -28,6 +28,7 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
         }
 
         private static IPAddress address;
+        private static IPAddress localAddress;
 
         /// <summary>
         /// Gets the public-facing IP address of the server, if known
@@ -38,19 +39,38 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
             {
                 try
                 {
-                    if (address != null)
+                    if (address == null)
                     {
+                        WebClient webClient = new WebClient();
+                        IPAddress.TryParse(webClient.DownloadString("http://api.ipify.org"), out address);
                         return address;
                     }
 
-                    WebClient webClient = new WebClient();
-                    IPAddress.TryParse(webClient.DownloadString("http://api.ipify.org"), out address);
                     return address;
                 }
                 catch (Exception ex)
                 {
-                    RemoteLogger.Exception("Couldn't get server IP address", ex);
-                    return new IPAddress(0);
+                    RemoteLogger.Exception("Couldn't get server's public IP address", ex);
+                    return IPAddress.Any;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the local IP address of the server, if known
+        /// </summary>
+        public IPAddress LocalAddress
+        {
+            get
+            {
+                try
+                {
+                    return localAddress ?? (localAddress = Utility.GetLocalIP());
+                }
+                catch (Exception ex)
+                {
+                    RemoteLogger.Exception("Couldn't get server's local IP address", ex);
+                    return IPAddress.Any;
                 }
             }
         }
