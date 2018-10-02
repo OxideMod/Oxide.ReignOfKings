@@ -1,6 +1,6 @@
 {
   "Name": "Reign of Kings",
-  "TargetDirectory": "E:\\Servers\\ReignOfKings\\ROK_Data\\Managed",
+  "TargetDirectory": "D:\\Servers\\ReignOfKings\\ROK_Data\\Managed",
   "Manifests": [
     {
       "AssemblyName": "Assembly-CSharp.dll",
@@ -859,7 +859,7 @@
         {
           "Type": "Simple",
           "Hook": {
-            "InjectionIndex": 27,
+            "InjectionIndex": 20,
             "ReturnBehavior": 1,
             "ArgumentBehavior": 2,
             "ArgumentString": null,
@@ -1335,6 +1335,32 @@
             "MSILHash": "x6X121SlpWSLobTlaVCc0VKrgtTzhTycGkBri8PRv/g=",
             "BaseHookName": null,
             "HookCategory": "Guild"
+          }
+        },
+        {
+          "Type": "Simple",
+          "Hook": {
+            "InjectionIndex": 41,
+            "ReturnBehavior": 0,
+            "ArgumentBehavior": 2,
+            "ArgumentString": null,
+            "HookTypeName": "Simple",
+            "Name": "OnPlayerSpawned",
+            "HookName": "OnPlayerSpawned",
+            "AssemblyName": "Assembly-CSharp.dll",
+            "TypeName": "CodeHatch.Networking.Events.Listeners.PlayerListener",
+            "Flagged": false,
+            "Signature": {
+              "Exposure": 0,
+              "Name": "OnPreSpawnComplete",
+              "ReturnType": "System.Void",
+              "Parameters": [
+                "CodeHatch.Networking.Events.Players.PlayerPreSpawnCompleteEvent"
+              ]
+            },
+            "MSILHash": "lvGnoq8NW5UGkCU4ZmCNvrn5mMMewMvVgg/6Jf55GqI=",
+            "BaseHookName": null,
+            "HookCategory": "Player"
           }
         }
       ],
