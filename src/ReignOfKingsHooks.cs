@@ -131,6 +131,12 @@ namespace Oxide.Game.ReignOfKings
         [HookMethod("IOnPlayerChat")]
         private object IOnPlayerChat(PlayerMessageEvent evt)
         {
+            // Ignore the server player
+            if (evt.PlayerId == 9999999999)
+            {
+                return null;
+            }
+
             // Call game and covalence hooks
             object chatSpecific = Interface.Call("OnPlayerChat", evt);
             object chatCovalence = Interface.Call("OnUserChat", evt.Player.IPlayer, evt.Message);
