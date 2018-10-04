@@ -266,18 +266,6 @@ namespace Oxide.Game.ReignOfKings
                 return null;
             }
 
-            if (Interface.Call("OnServerCommand", str) != null)
-            {
-                return true;
-            }
-
-            // Check if command is from the player
-            Player player = CodeHatch.Engine.Networking.Server.GetPlayerById(id);
-            if (player == null)
-            {
-                return null;
-            }
-
             // Get the full command
             string message = str.TrimStart('/');
 
@@ -286,6 +274,18 @@ namespace Oxide.Game.ReignOfKings
             string[] args;
             ParseCommand(message, out cmd, out args);
             if (cmd == null)
+            {
+                return null;
+            }
+
+            if (Interface.Call("OnServerCommand", cmd, args) != null)
+            {
+                return true;
+            }
+
+            // Check if command is from the player
+            Player player = CodeHatch.Engine.Networking.Server.GetPlayerById(id);
+            if (player == null)
             {
                 return null;
             }
