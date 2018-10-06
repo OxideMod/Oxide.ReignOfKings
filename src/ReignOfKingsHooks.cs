@@ -1,13 +1,10 @@
 ﻿using CodeHatch.Common;
-using CodeHatch.Engine.Common;
 using CodeHatch.Engine.Networking;
 using CodeHatch.Networking.Events.Players;
 using Oxide.Core;
 using Oxide.Core.Configuration;
 using Oxide.Core.Libraries.Covalence;
 using Oxide.Core.Plugins;
-using System;
-using System.Reflection;
 
 namespace Oxide.Game.ReignOfKings
 {
@@ -16,77 +13,6 @@ namespace Oxide.Game.ReignOfKings
     /// </summary>
     public partial class ReignOfKingsCore
     {
-        #region Server Hooks
-
-        /// <summary>
-        /// Called by the server when starting, wrapped to prevent errors with dynamic assemblies
-        /// </summary>
-        /// <param name="fullTypeName"></param>
-        /// <returns></returns>
-        [HookMethod("IGetTypeFromName")]
-        private Type IGetTypeFromName(string fullTypeName)
-        {
-            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                if (assembly is System.Reflection.Emit.AssemblyBuilder)
-                {
-                    continue;
-                }
-
-                try
-                {
-                    foreach (Type type in assembly.GetExportedTypes())
-                    {
-                        if (type.Name == fullTypeName)
-                        {
-                            return type;
-                        }
-                    }
-                }
-                catch
-                {
-                    // Ignored
-                }
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Called when the hash is recalculated
-        /// </summary>
-        /// <param name="fileHasher"></param>
-        [HookMethod("IOnRecalculateHash")]
-        private void IOnRecalculateHash(FileHasher fileHasher)
-        {
-            if (fileHasher.FileLocationFromDataPath.Equals("/Managed/Assembly-CSharp.dll"))
-            {
-                fileHasher.FileLocationFromDataPath = "/Managed/Assembly-CSharp_Original.dll";
-            }
-        }
-
-        /// <summary>
-        /// Called when the files are counted
-        /// </summary>
-        /// <param name="fileCounter"></param>
-        [HookMethod("IOnCountFolder")]
-        private void IOnCountFolder(FileCounter fileCounter)
-        {
-            if (fileCounter.FolderLocationFromDataPath.Equals("/Managed/") && fileCounter.Folders.Length != 39)
-            {
-                string[] folders = (string[])FoldersField.GetValue(fileCounter);
-                Array.Resize(ref folders, 39);
-                FoldersField.SetValue(fileCounter, folders);
-            }
-            else if (fileCounter.FolderLocationFromDataPath.Equals("/../") && fileCounter.Folders.Length != 2)
-            {
-                string[] folders = (string[])FoldersField.GetValue(fileCounter);
-                Array.Resize(ref folders, 2);
-                FoldersField.SetValue(fileCounter, folders);
-            }
-        }
-
-        #endregion Server Hooks
-
         #region Player Hooks
 
         /// <summary>
