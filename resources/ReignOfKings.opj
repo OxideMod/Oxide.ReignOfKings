@@ -1490,7 +1490,7 @@
             },
             "MSILHash": "nKss1i5/JvKpqtutTsbF8Wq2BZKwvwLeulzIJiVK5T8=",
             "BaseHookName": null,
-            "HookCategory": "Server"
+            "HookCategory": "_Patch"
           }
         },
         {
@@ -1596,7 +1596,7 @@
             },
             "MSILHash": "nKss1i5/JvKpqtutTsbF8Wq2BZKwvwLeulzIJiVK5T8=",
             "BaseHookName": "RecountFoldersManaged [patch]",
-            "HookCategory": "Server"
+            "HookCategory": "_Patch"
           }
         }
       ],
