@@ -9,7 +9,6 @@ using Oxide.Game.ReignOfKings.Libraries;
 using Oxide.Game.ReignOfKings.Libraries.Covalence;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Text;
 using Permission = Oxide.Core.Libraries.Permission;
 
@@ -77,8 +76,6 @@ namespace Oxide.Game.ReignOfKings
 
         // Track 'load' chat commands
         private readonly Dictionary<string, Player> loadingPlugins = new Dictionary<string, Player>();
-
-        private static readonly FieldInfo FoldersField = typeof(FileCounter).GetField("_folders", BindingFlags.Instance | BindingFlags.NonPublic);
 
         #endregion Initialization
 
@@ -266,18 +263,6 @@ namespace Oxide.Game.ReignOfKings
                 return null;
             }
 
-            if (Interface.Call("OnServerCommand", str) != null)
-            {
-                return true;
-            }
-
-            // Check if command is from the player
-            Player player = CodeHatch.Engine.Networking.Server.GetPlayerById(id);
-            if (player == null)
-            {
-                return null;
-            }
-
             // Get the full command
             string message = str.TrimStart('/');
 
@@ -286,6 +271,18 @@ namespace Oxide.Game.ReignOfKings
             string[] args;
             ParseCommand(message, out cmd, out args);
             if (cmd == null)
+            {
+                return null;
+            }
+
+            if (Interface.Call("OnServerCommand", cmd, args) != null)
+            {
+                return true;
+            }
+
+            // Check if command is from the player
+            Player player = CodeHatch.Engine.Networking.Server.GetPlayerById(id);
+            if (player == null)
             {
                 return null;
             }

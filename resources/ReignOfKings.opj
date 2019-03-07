@@ -465,33 +465,6 @@
         {
           "Type": "Simple",
           "Hook": {
-            "InjectionIndex": 0,
-            "ReturnBehavior": 1,
-            "ArgumentBehavior": 4,
-            "ArgumentString": "a0",
-            "HookTypeName": "Simple",
-            "Name": "IGetTypeFromName [internal]",
-            "HookName": "IGetTypeFromName",
-            "AssemblyName": "Assembly-CSharp.dll",
-            "TypeName": "CodeHatch.Engine.Core.ReflectionUtil",
-            "Flagged": false,
-            "Signature": {
-              "Exposure": 2,
-              "Name": "GetTypeFromName",
-              "ReturnType": "System.Type",
-              "Parameters": [
-                "System.String",
-                "System.Boolean"
-              ]
-            },
-            "MSILHash": "PAGxvDQAcyHF6BpA3aYOeg5ljKXqC6dBhOFDslc8+y4=",
-            "BaseHookName": null,
-            "HookCategory": "Server"
-          }
-        },
-        {
-          "Type": "Simple",
-          "Hook": {
             "InjectionIndex": 3,
             "ReturnBehavior": 0,
             "ArgumentBehavior": 2,
@@ -513,58 +486,6 @@
             "MSILHash": "sqpa5aoSBvK9360G+1xPiA2I5m2fx460MhSxhm4VAlc=",
             "BaseHookName": null,
             "HookCategory": "Player"
-          }
-        },
-        {
-          "Type": "Simple",
-          "Hook": {
-            "InjectionIndex": 0,
-            "ReturnBehavior": 0,
-            "ArgumentBehavior": 1,
-            "ArgumentString": null,
-            "HookTypeName": "Simple",
-            "Name": "IOnRecalculateHash [internal]",
-            "HookName": "IOnRecalculateHash",
-            "AssemblyName": "Assembly-CSharp.dll",
-            "TypeName": "CodeHatch.Engine.Common.FileHasher",
-            "Flagged": false,
-            "Signature": {
-              "Exposure": 2,
-              "Name": "RecalculateHash",
-              "ReturnType": "System.UInt32",
-              "Parameters": [
-                "System.UInt32"
-              ]
-            },
-            "MSILHash": "ZETSqh1ouKlWrAU9j0KXfR4fmJXkqDnr17bltm7gpPI=",
-            "BaseHookName": null,
-            "HookCategory": "Server"
-          }
-        },
-        {
-          "Type": "Simple",
-          "Hook": {
-            "InjectionIndex": 0,
-            "ReturnBehavior": 0,
-            "ArgumentBehavior": 1,
-            "ArgumentString": null,
-            "HookTypeName": "Simple",
-            "Name": "IOnCountFolder [internal]",
-            "HookName": "IOnCountFolder",
-            "AssemblyName": "Assembly-CSharp.dll",
-            "TypeName": "FileCounter",
-            "Flagged": false,
-            "Signature": {
-              "Exposure": 2,
-              "Name": "CountFolder",
-              "ReturnType": "System.UInt32",
-              "Parameters": [
-                "System.UInt32"
-              ]
-            },
-            "MSILHash": "nKss1i5/JvKpqtutTsbF8Wq2BZKwvwLeulzIJiVK5T8=",
-            "BaseHookName": null,
-            "HookCategory": "Server"
           }
         },
         {
@@ -1361,6 +1282,321 @@
             "MSILHash": "lvGnoq8NW5UGkCU4ZmCNvrn5mMMewMvVgg/6Jf55GqI=",
             "BaseHookName": null,
             "HookCategory": "Player"
+          }
+        },
+        {
+          "Type": "Modify",
+          "Hook": {
+            "InjectionIndex": 0,
+            "RemoveCount": 0,
+            "Instructions": [
+              {
+                "OpCode": "ldarg_0",
+                "OpType": "None",
+                "Operand": null
+              },
+              {
+                "OpCode": "ldfld",
+                "OpType": "Field",
+                "Operand": "Assembly-CSharp|CodeHatch.Engine.Common.FileHasher|FileLocationFromDataPath"
+              },
+              {
+                "OpCode": "ldstr",
+                "OpType": "String",
+                "Operand": "/Managed/Assembly-CSharp.dll"
+              },
+              {
+                "OpCode": "callvirt",
+                "OpType": "Method",
+                "Operand": "mscorlib|System.String|Equals"
+              },
+              {
+                "OpCode": "brfalse",
+                "OpType": "Instruction",
+                "Operand": 0
+              },
+              {
+                "OpCode": "ldarg_0",
+                "OpType": "None",
+                "Operand": null
+              },
+              {
+                "OpCode": "ldstr",
+                "OpType": "String",
+                "Operand": "/Managed/Assembly-CSharp_Original.dll"
+              },
+              {
+                "OpCode": "stfld",
+                "OpType": "Field",
+                "Operand": "Assembly-CSharp|CodeHatch.Engine.Common.FileHasher|FileLocationFromDataPath"
+              }
+            ],
+            "HookTypeName": "Modify",
+            "Name": "CalculateOriginalHash [patch]",
+            "HookName": "CalculateOriginalHash",
+            "AssemblyName": "Assembly-CSharp.dll",
+            "TypeName": "CodeHatch.Engine.Common.FileHasher",
+            "Flagged": false,
+            "Signature": {
+              "Exposure": 2,
+              "Name": "RecalculateHash",
+              "ReturnType": "System.UInt32",
+              "Parameters": [
+                "System.UInt32"
+              ]
+            },
+            "MSILHash": "ZETSqh1ouKlWrAU9j0KXfR4fmJXkqDnr17bltm7gpPI=",
+            "BaseHookName": null,
+            "HookCategory": "_Patch"
+          }
+        },
+        {
+          "Type": "Modify",
+          "Hook": {
+            "InjectionIndex": 10,
+            "RemoveCount": 4,
+            "Instructions": [
+              {
+                "OpCode": "ldloc_2",
+                "OpType": "None",
+                "Operand": null
+              },
+              {
+                "OpCode": "isinst",
+                "OpType": "Type",
+                "Operand": "mscorlib|System.Reflection.Emit.AssemblyBuilder"
+              },
+              {
+                "OpCode": "brtrue_s",
+                "OpType": "Instruction",
+                "Operand": 47
+              }
+            ],
+            "HookTypeName": "Modify",
+            "Name": "HandleDynamicTypes [patch]",
+            "HookName": "HandleDynamicTypes",
+            "AssemblyName": "Assembly-CSharp.dll",
+            "TypeName": "CodeHatch.Engine.Core.ReflectionUtil",
+            "Flagged": false,
+            "Signature": {
+              "Exposure": 2,
+              "Name": "GetTypeFromName",
+              "ReturnType": "System.Type",
+              "Parameters": [
+                "System.String",
+                "System.Boolean"
+              ]
+            },
+            "MSILHash": "PAGxvDQAcyHF6BpA3aYOeg5ljKXqC6dBhOFDslc8+y4=",
+            "BaseHookName": null,
+            "HookCategory": "_Patch"
+          }
+        },
+        {
+          "Type": "Modify",
+          "Hook": {
+            "InjectionIndex": 0,
+            "RemoveCount": 0,
+            "Instructions": [
+              {
+                "OpCode": "ldarg_0",
+                "OpType": "None",
+                "Operand": null
+              },
+              {
+                "OpCode": "ldfld",
+                "OpType": "Field",
+                "Operand": "Assembly-CSharp|FileCounter|FolderLocationFromDataPath"
+              },
+              {
+                "OpCode": "ldstr",
+                "OpType": "String",
+                "Operand": "/Managed/"
+              },
+              {
+                "OpCode": "callvirt",
+                "OpType": "Method",
+                "Operand": "mscorlib|System.String|Equals(System.String)"
+              },
+              {
+                "OpCode": "brfalse_s",
+                "OpType": "Instruction",
+                "Operand": 0
+              },
+              {
+                "OpCode": "ldarg_0",
+                "OpType": "None",
+                "Operand": null
+              },
+              {
+                "OpCode": "call",
+                "OpType": "Method",
+                "Operand": "Assembly-CSharp|FileCounter|get_Folders"
+              },
+              {
+                "OpCode": "ldlen",
+                "OpType": "None",
+                "Operand": null
+              },
+              {
+                "OpCode": "conv_i4",
+                "OpType": "None",
+                "Operand": null
+              },
+              {
+                "OpCode": "ldc_i4",
+                "OpType": "Int32",
+                "Operand": "39"
+              },
+              {
+                "OpCode": "beq_s",
+                "OpType": "Instruction",
+                "Operand": 0
+              },
+              {
+                "OpCode": "ldarg_0",
+                "OpType": "None",
+                "Operand": null
+              },
+              {
+                "OpCode": "ldflda",
+                "OpType": "Field",
+                "Operand": "Assembly-CSharp|FileCounter|_folders"
+              },
+              {
+                "OpCode": "ldc_i4",
+                "OpType": "Int32",
+                "Operand": "39"
+              },
+              {
+                "OpCode": "call",
+                "OpType": "Method",
+                "Operand": "mscorlib|System.Array|Resize[System.String]"
+              }
+            ],
+            "HookTypeName": "Modify",
+            "Name": "RecountFoldersManaged [patch]",
+            "HookName": "RecountFoldersManaged",
+            "AssemblyName": "Assembly-CSharp.dll",
+            "TypeName": "FileCounter",
+            "Flagged": false,
+            "Signature": {
+              "Exposure": 2,
+              "Name": "CountFolder",
+              "ReturnType": "System.UInt32",
+              "Parameters": [
+                "System.UInt32"
+              ]
+            },
+            "MSILHash": "nKss1i5/JvKpqtutTsbF8Wq2BZKwvwLeulzIJiVK5T8=",
+            "BaseHookName": null,
+            "HookCategory": "_Patch"
+          }
+        },
+        {
+          "Type": "Modify",
+          "Hook": {
+            "InjectionIndex": 0,
+            "RemoveCount": 0,
+            "Instructions": [
+              {
+                "OpCode": "ldarg_0",
+                "OpType": "None",
+                "Operand": null
+              },
+              {
+                "OpCode": "ldfld",
+                "OpType": "Field",
+                "Operand": "Assembly-CSharp|FileCounter|FolderLocationFromDataPath"
+              },
+              {
+                "OpCode": "ldstr",
+                "OpType": "String",
+                "Operand": "/../"
+              },
+              {
+                "OpCode": "callvirt",
+                "OpType": "Method",
+                "Operand": "mscorlib|System.String|Equals(System.String)"
+              },
+              {
+                "OpCode": "brfalse_s",
+                "OpType": "Instruction",
+                "Operand": 0
+              },
+              {
+                "OpCode": "ldarg_0",
+                "OpType": "None",
+                "Operand": null
+              },
+              {
+                "OpCode": "call",
+                "OpType": "Method",
+                "Operand": "Assembly-CSharp|FileCounter|get_Folders"
+              },
+              {
+                "OpCode": "ldlen",
+                "OpType": "None",
+                "Operand": null
+              },
+              {
+                "OpCode": "conv_i4",
+                "OpType": "None",
+                "Operand": null
+              },
+              {
+                "OpCode": "ldc_i4_2",
+                "OpType": "None",
+                "Operand": null
+              },
+              {
+                "OpCode": "beq_s",
+                "OpType": "Instruction",
+                "Operand": 0
+              },
+              {
+                "OpCode": "ldarg_0",
+                "OpType": "None",
+                "Operand": null
+              },
+              {
+                "OpCode": "ldflda",
+                "OpType": "Field",
+                "Operand": "Assembly-CSharp|FileCounter|_folders"
+              },
+              {
+                "OpCode": "ldc_i4_2",
+                "OpType": "None",
+                "Operand": null
+              },
+              {
+                "OpCode": "call",
+                "OpType": "Method",
+                "Operand": "mscorlib|System.Array|Resize[System.String]"
+              },
+              {
+                "OpCode": "br_s",
+                "OpType": "Instruction",
+                "Operand": 0
+              }
+            ],
+            "HookTypeName": "Modify",
+            "Name": "RecountFoldersRoot [patch]",
+            "HookName": "RecountFoldersRoot",
+            "AssemblyName": "Assembly-CSharp.dll",
+            "TypeName": "FileCounter",
+            "Flagged": false,
+            "Signature": {
+              "Exposure": 2,
+              "Name": "CountFolder",
+              "ReturnType": "System.UInt32",
+              "Parameters": [
+                "System.UInt32"
+              ]
+            },
+            "MSILHash": "nKss1i5/JvKpqtutTsbF8Wq2BZKwvwLeulzIJiVK5T8=",
+            "BaseHookName": "RecountFoldersManaged [patch]",
+            "HookCategory": "_Patch"
           }
         }
       ],
