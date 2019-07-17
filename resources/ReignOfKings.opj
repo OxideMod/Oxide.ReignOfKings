@@ -127,7 +127,7 @@
         {
           "Type": "Simple",
           "Hook": {
-            "InjectionIndex": 212,
+            "InjectionIndex": 174,
             "ReturnBehavior": 1,
             "ArgumentBehavior": 4,
             "ArgumentString": "l5",
@@ -145,7 +145,7 @@
                 "CodeHatch.Engine.Networking.Connection"
               ]
             },
-            "MSILHash": "lcJFosxw3GnYclhc0uW76qhOGctItgkbIFW/cWcKaNE=",
+            "MSILHash": "Spoheojx5kuq+FSeefxLnxqS/HHi3P4AUCO67wbDaHA=",
             "BaseHookName": null,
             "HookCategory": "Player"
           }
@@ -158,7 +158,7 @@
             "ArgumentBehavior": 2,
             "ArgumentString": "",
             "HookTypeName": "Simple",
-            "Name": "IOnPlayerChat [guild, internal]]",
+            "Name": "IOnPlayerChat [guild, internal]",
             "HookName": "IOnPlayerChat",
             "AssemblyName": "Assembly-CSharp.dll",
             "TypeName": "CodeHatch.Networking.Events.Listeners.PlayerListener",
@@ -171,7 +171,7 @@
                 "CodeHatch.Networking.Events.Players.PlayerMessageEvent"
               ]
             },
-            "MSILHash": "2xh/Vu5nFAund2jUeJOkgfS22jXYDf+qrWBHzj7TaZo=",
+            "MSILHash": "ZficYx9zhcSt3kzeHX/D+Yt2yjIhPCp1LpfxDvR2Q0E=",
             "BaseHookName": null,
             "HookCategory": "Player"
           }
@@ -301,7 +301,7 @@
                 "CodeHatch.Blocks.Networking.Events.CubePlaceEvent"
               ]
             },
-            "MSILHash": "DQgiZQ7jpKYeb4gU5YVeNVqwbGVQvV4kCgxbF9vMRLw=",
+            "MSILHash": "ZNaeIa04B2HyL9Nb7sFNirlyGvX2eS1DuG7OKQHedAA=",
             "BaseHookName": null,
             "HookCategory": "Structure"
           }
@@ -353,7 +353,7 @@
                 "CodeHatch.Blocks.Networking.Events.CubeDestroyEvent"
               ]
             },
-            "MSILHash": "lbleYSjvVnVRkQQnd0JcQTlKjJHP31DQN5nIUAQ8NRs=",
+            "MSILHash": "cyMXLEHfpV4m2FpkZS2McAfbe2RtqehZSVzulver+Ek=",
             "BaseHookName": null,
             "HookCategory": "Structure"
           }
@@ -535,8 +535,8 @@
                 "CodeHatch.Networking.Events.Players.PlayerMessageEvent"
               ]
             },
-            "MSILHash": "2xh/Vu5nFAund2jUeJOkgfS22jXYDf+qrWBHzj7TaZo=",
-            "BaseHookName": "IOnPlayerChat [guild, internal]]",
+            "MSILHash": "ZficYx9zhcSt3kzeHX/D+Yt2yjIhPCp1LpfxDvR2Q0E=",
+            "BaseHookName": "IOnPlayerChat [guild, internal]",
             "HookCategory": "Player"
           }
         },
@@ -824,7 +824,7 @@
                 "CodeHatch.Networking.Events.Entities.Objects.Gadgets.GadgetCollectEvent"
               ]
             },
-            "MSILHash": "VZNpL9HwCqtQkZHTQcHz238s8rJ35JXnqpJuuY9pOu8=",
+            "MSILHash": "gBOz4uq7smd1/4zrryGu4NTGTCz6dv2nmtAbsmW+Rqg=",
             "BaseHookName": null,
             "HookCategory": "Item"
           }
