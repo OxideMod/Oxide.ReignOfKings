@@ -301,7 +301,7 @@
                 "CodeHatch.Blocks.Networking.Events.CubePlaceEvent"
               ]
             },
-            "MSILHash": "ZNaeIa04B2HyL9Nb7sFNirlyGvX2eS1DuG7OKQHedAA=",
+            "MSILHash": "HvgxEO2a7Uxh/ZAxmF/LUolwW9pHsM6ORgf9rrI+M2Q=",
             "BaseHookName": null,
             "HookCategory": "Structure"
           }
@@ -353,7 +353,7 @@
                 "CodeHatch.Blocks.Networking.Events.CubeDestroyEvent"
               ]
             },
-            "MSILHash": "cyMXLEHfpV4m2FpkZS2McAfbe2RtqehZSVzulver+Ek=",
+            "MSILHash": "nihfyDgstMOSoOpfH6epobeqVcCW7icoklV4xVwwH7s=",
             "BaseHookName": null,
             "HookCategory": "Structure"
           }
