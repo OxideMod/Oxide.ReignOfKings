@@ -1285,6 +1285,58 @@
           }
         },
         {
+          "Type": "Simple",
+          "Hook": {
+            "InjectionIndex": 14,
+            "ReturnBehavior": 1,
+            "ArgumentBehavior": 2,
+            "ArgumentString": null,
+            "HookTypeName": "Simple",
+            "Name": "OnGuildAbandon",
+            "HookName": "OnGuildAbandon",
+            "AssemblyName": "Assembly-CSharp.dll",
+            "TypeName": "CodeHatch.Thrones.SocialSystem.ServerSupplier",
+            "Flagged": false,
+            "Signature": {
+              "Exposure": 0,
+              "Name": "OnRemoveRequest",
+              "ReturnType": "System.Void",
+              "Parameters": [
+                "CodeHatch.Thrones.SocialSystem.RemoveMembershipInfoEvent"
+              ]
+            },
+            "MSILHash": "XEigPOQkMETVqZgZeQfRbrXhW+reM3Twzh219H1bJKY=",
+            "BaseHookName": null,
+            "HookCategory": "Guild"
+          }
+        },
+        {
+          "Type": "Simple",
+          "Hook": {
+            "InjectionIndex": 31,
+            "ReturnBehavior": 1,
+            "ArgumentBehavior": 2,
+            "ArgumentString": null,
+            "HookTypeName": "Simple",
+            "Name": "OnGuildBanish",
+            "HookName": "OnGuildBanish",
+            "AssemblyName": "Assembly-CSharp.dll",
+            "TypeName": "CodeHatch.Thrones.SocialSystem.ServerSupplier",
+            "Flagged": false,
+            "Signature": {
+              "Exposure": 0,
+              "Name": "OnBanishMember",
+              "ReturnType": "System.Void",
+              "Parameters": [
+                "CodeHatch.Thrones.SocialSystem.BanishMemberEvent"
+              ]
+            },
+            "MSILHash": "zesKBDhTsQ2fb9L3oaxlykNe2BsIObcPSmL+38M49ko=",
+            "BaseHookName": null,
+            "HookCategory": "Guild"
+          }
+        },
+        {
           "Type": "Modify",
           "Hook": {
             "InjectionIndex": 0,
