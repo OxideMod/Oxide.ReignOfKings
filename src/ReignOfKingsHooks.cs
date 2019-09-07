@@ -84,12 +84,6 @@ namespace Oxide.Game.ReignOfKings
         [HookMethod("IOnPlayerConnected")]
         private void IOnPlayerConnected(Player player)
         {
-            // Ignore the server player
-            if (player.Id == 9999999999)
-            {
-                return;
-            }
-
             // Update player's permissions group and name
             if (permission.IsLoaded)
             {
@@ -107,9 +101,6 @@ namespace Oxide.Game.ReignOfKings
                 }
             }
 
-            // Call game-specific hook
-            Interface.Call("OnPlayerConnected", player);
-
             // Let covalence know player connected
             Covalence.PlayerManager.PlayerConnected(player);
 
@@ -119,8 +110,15 @@ namespace Oxide.Game.ReignOfKings
             {
                 player.IPlayer = iplayer;
 
-                // Call universal hook
-                Interface.Call("OnUserConnected", iplayer);
+                // Ignore the server player
+                if (player.Id != 9999999999)
+                {
+                    // Call game-specific hook
+                    Interface.Call("OnPlayerConnected", player);
+
+                    // Call universal hook
+                    Interface.Call("OnUserConnected", iplayer);
+                }
             }
         }
 
