@@ -43,8 +43,7 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
         {
             string id = userId.ToString();
 
-            PlayerRecord record;
-            if (playerData.TryGetValue(id, out record))
+            if (playerData.TryGetValue(id, out PlayerRecord record))
             {
                 record.Name = name;
                 playerData[id] = record;
@@ -96,8 +95,7 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
         /// <returns></returns>
         public IPlayer FindPlayerById(string id)
         {
-            ReignOfKingsPlayer player;
-            return allPlayers.TryGetValue(id, out player) ? player : null;
+            return allPlayers.TryGetValue(id, out ReignOfKingsPlayer player) ? player : null;
         }
 
         /// <summary>

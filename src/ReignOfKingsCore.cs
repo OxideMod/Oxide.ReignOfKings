@@ -35,15 +35,13 @@ namespace Oxide.Game.ReignOfKings
             {
                 foreach (string command in attribute.Aliases.InsertItem(attribute.Name, 0))
                 {
-                    Command.ChatCommand chatCommand;
-                    if (cmdlib.ChatCommands.TryGetValue(command, out chatCommand))
+                    if (cmdlib.ChatCommands.TryGetValue(command, out Command.ChatCommand chatCommand))
                     {
                         cmdlib.ChatCommands.Remove(chatCommand.Name);
                         cmdlib.AddChatCommand(chatCommand.Name, chatCommand.Plugin, chatCommand.Callback);
                     }
 
-                    ReignOfKingsCommandSystem.RegisteredCommand covalenceCommand;
-                    if (Covalence.CommandSystem.registeredCommands.TryGetValue(command, out covalenceCommand))
+                    if (Covalence.CommandSystem.registeredCommands.TryGetValue(command, out ReignOfKingsCommandSystem.RegisteredCommand covalenceCommand))
                     {
                         Covalence.CommandSystem.registeredCommands.Remove(covalenceCommand.Command);
                         Covalence.CommandSystem.RegisterCommand(covalenceCommand.Command, covalenceCommand.Source, covalenceCommand.Callback);
@@ -73,9 +71,6 @@ namespace Oxide.Game.ReignOfKings
         private CodeHatch.Permissions.Permission rokPerms;
 
         private bool serverInitialized;
-
-        // Track 'load' chat commands
-        private readonly Dictionary<string, Player> loadingPlugins = new Dictionary<string, Player>();
 
         #endregion Initialization
 
@@ -147,8 +142,7 @@ namespace Oxide.Game.ReignOfKings
 
                 permission.RegisterValidate(s =>
                 {
-                    ulong temp;
-                    if (!ulong.TryParse(s, out temp))
+                    if (!ulong.TryParse(s, out ulong temp))
                     {
                         return false;
                     }
@@ -267,9 +261,7 @@ namespace Oxide.Game.ReignOfKings
             string message = str.TrimStart('/');
 
             // Parse it
-            string cmd;
-            string[] args;
-            ParseCommand(message, out cmd, out args);
+            ParseCommand(message, out string cmd, out string[] args);
             if (cmd == null)
             {
                 return null;

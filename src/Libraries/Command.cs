@@ -87,8 +87,7 @@ namespace Oxide.Game.ReignOfKings.Libraries
             }
 
             // Check if command already exists in another Reign of Kings plugin
-            ChatCommand cmd;
-            if (ChatCommands.TryGetValue(commandName, out cmd))
+            if (ChatCommands.TryGetValue(commandName, out ChatCommand cmd))
             {
                 if (cmd.OriginalCallback != null)
                 {
@@ -102,8 +101,7 @@ namespace Oxide.Game.ReignOfKings.Libraries
             }
 
             // Check if command already exists in a Covalence plugin
-            ReignOfKingsCommandSystem.RegisteredCommand covalenceCommand;
-            if (ReignOfKingsCore.Covalence.CommandSystem.registeredCommands.TryGetValue(commandName, out covalenceCommand))
+            if (ReignOfKingsCore.Covalence.CommandSystem.registeredCommands.TryGetValue(commandName, out ReignOfKingsCommandSystem.RegisteredCommand covalenceCommand))
             {
                 if (covalenceCommand.OriginalCallback != null)
                 {
@@ -151,8 +149,7 @@ namespace Oxide.Game.ReignOfKings.Libraries
 
         private void HandleCommand(CommandInfo cmdInfo)
         {
-            ChatCommand cmd;
-            if (!ChatCommands.TryGetValue(cmdInfo.Label.ToLowerInvariant(), out cmd))
+            if (!ChatCommands.TryGetValue(cmdInfo.Label.ToLowerInvariant(), out ChatCommand cmd))
             {
                 return;
             }
@@ -168,8 +165,7 @@ namespace Oxide.Game.ReignOfKings.Libraries
         /// <param name="args"></param>
         internal bool HandleChatCommand(Player sender, string name, string[] args)
         {
-            ChatCommand cmd;
-            if (!ChatCommands.TryGetValue(name.ToLowerInvariant(), out cmd))
+            if (!ChatCommands.TryGetValue(name.ToLowerInvariant(), out ChatCommand cmd))
             {
                 return false;
             }
@@ -203,8 +199,7 @@ namespace Oxide.Game.ReignOfKings.Libraries
             }
 
             // Unhook the event
-            Event.Callback<Plugin, PluginManager> callback;
-            if (pluginRemovedFromManager.TryGetValue(sender, out callback))
+            if (pluginRemovedFromManager.TryGetValue(sender, out Event.Callback<Plugin, PluginManager> callback))
             {
                 callback.Remove();
                 pluginRemovedFromManager.Remove(sender);
@@ -219,8 +214,7 @@ namespace Oxide.Game.ReignOfKings.Libraries
         /// <returns></returns>
         private bool CanOverrideCommand(string command, string type)
         {
-            ReignOfKingsCommandSystem.RegisteredCommand cmd;
-            if (ReignOfKingsCore.Covalence.CommandSystem.registeredCommands.TryGetValue(command, out cmd))
+            if (ReignOfKingsCore.Covalence.CommandSystem.registeredCommands.TryGetValue(command, out ReignOfKingsCommandSystem.RegisteredCommand cmd))
             {
                 if (cmd.Source.IsCorePlugin)
                 {
@@ -230,8 +224,7 @@ namespace Oxide.Game.ReignOfKings.Libraries
 
             if (type == "chat")
             {
-                ChatCommand chatCommand;
-                if (ChatCommands.TryGetValue(command, out chatCommand))
+                if (ChatCommands.TryGetValue(command, out ChatCommand chatCommand))
                 {
                     if (chatCommand.Plugin.IsCorePlugin)
                     {

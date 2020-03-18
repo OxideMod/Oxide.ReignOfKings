@@ -80,8 +80,7 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
 
         private bool ChatCommandCallback(IPlayer caller, string cmd, string[] args)
         {
-            RegisteredCommand command;
-            return registeredCommands.TryGetValue(cmd, out command) && command.Callback(caller, cmd, args);
+            return registeredCommands.TryGetValue(cmd, out RegisteredCommand command) && command.Callback(caller, cmd, args);
         }
 
         #endregion Initialization
@@ -109,8 +108,7 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
             }
 
             // Check if command already exists in another Covalence plugin
-            RegisteredCommand cmd;
-            if (registeredCommands.TryGetValue(command, out cmd))
+            if (registeredCommands.TryGetValue(command, out RegisteredCommand cmd))
             {
                 if (cmd.OriginalCallback != null)
                 {
@@ -124,8 +122,7 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
             }
 
             // Check if command already exists in a Reign of Kings plugin as a chat command
-            Command.ChatCommand chatCommand;
-            if (cmdlib.ChatCommands.TryGetValue(command, out chatCommand))
+            if (cmdlib.ChatCommands.TryGetValue(command, out Command.ChatCommand chatCommand))
             {
                 if (chatCommand.OriginalCallback != null)
                 {
@@ -168,8 +165,7 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
 
         private void HandleCommand(CommandInfo cmdInfo)
         {
-            RegisteredCommand cmd;
-            if (!registeredCommands.TryGetValue(cmdInfo.Label.ToLowerInvariant(), out cmd))
+            if (!registeredCommands.TryGetValue(cmdInfo.Label.ToLowerInvariant(), out RegisteredCommand cmd))
             {
                 return;
             }
@@ -189,8 +185,7 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
         /// <param name="plugin"></param>
         public void UnregisterCommand(string command, Plugin plugin)
         {
-            RegisteredCommand cmd;
-            if (!registeredCommands.TryGetValue(command, out cmd))
+            if (!registeredCommands.TryGetValue(command, out RegisteredCommand cmd))
             {
                 return;
             }
@@ -246,8 +241,7 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
         /// <returns></returns>
         private bool CanOverrideCommand(string command)
         {
-            RegisteredCommand cmd;
-            if (registeredCommands.TryGetValue(command, out cmd))
+            if (registeredCommands.TryGetValue(command, out RegisteredCommand cmd))
             {
                 if (cmd.Source.IsCorePlugin)
                 {
@@ -255,8 +249,7 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
                 }
             }
 
-            Command.ChatCommand chatCommand;
-            if (cmdlib.ChatCommands.TryGetValue(command, out chatCommand))
+            if (cmdlib.ChatCommands.TryGetValue(command, out Command.ChatCommand chatCommand))
             {
                 if (chatCommand.Plugin.IsCorePlugin)
                 {
