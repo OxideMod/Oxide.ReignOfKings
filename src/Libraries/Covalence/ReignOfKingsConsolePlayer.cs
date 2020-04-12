@@ -87,7 +87,7 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
         /// </summary>
         /// <param name="reason"></param>
         /// <param name="duration"></param>
-        public void Ban(string reason, TimeSpan duration = default(TimeSpan))
+        public void Ban(string reason, TimeSpan duration = default)
         {
         }
 

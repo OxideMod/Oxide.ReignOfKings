@@ -149,8 +149,7 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
                 if (cmd == null && chatCommand == null)
                 {
                     string newPluginName = plugin?.Name ?? "An unknown plugin";
-                    string message =
-                        $"{newPluginName} has replaced the '{command}' command previously registered by Reign of Kings";
+                    string message = $"{newPluginName} has replaced the '{command}' command previously registered by Reign of Kings";
                     Interface.Oxide.LogWarning(message);
                 }
             }
@@ -161,17 +160,6 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
             {
                 Method = (Action<CommandInfo>)Delegate.CreateDelegate(typeof(Action<CommandInfo>), this, GetType().GetMethod("HandleCommand", BindingFlags.NonPublic | BindingFlags.Instance))
             };
-        }
-
-        private void HandleCommand(CommandInfo cmdInfo)
-        {
-            if (!registeredCommands.TryGetValue(cmdInfo.Label.ToLowerInvariant(), out RegisteredCommand cmd))
-            {
-                return;
-            }
-
-            IPlayer iplayer = reignOfKingsCovalence.PlayerManager.FindPlayerById(cmdInfo.PlayerId.ToString()) ?? consolePlayer;
-            HandleChatMessage(iplayer, $"/{cmdInfo.Label} {string.Join(" ", cmdInfo.Args)}");
         }
 
         #endregion Command Registration
