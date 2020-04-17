@@ -23,6 +23,12 @@ namespace Oxide.Game.ReignOfKings
         [HookMethod("IOnUserApprove")]
         private object IOnUserApprove(Player player)
         {
+            // Ignore the server player
+            if (player.Id == 9999999999)
+            {
+                return null;
+            }
+
             string id = player.Id.ToString();
             string ip = player.Connection.IpAddress;
 
