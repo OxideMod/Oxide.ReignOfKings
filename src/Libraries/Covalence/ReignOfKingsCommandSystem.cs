@@ -1,4 +1,4 @@
-﻿using CodeHatch.Engine.Core.Commands;
+using CodeHatch.Engine.Core.Commands;
 using Oxide.Core;
 using Oxide.Core.Libraries.Covalence;
 using Oxide.Core.Plugins;
@@ -160,6 +160,17 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
             {
                 Method = (Action<CommandInfo>)Delegate.CreateDelegate(typeof(Action<CommandInfo>), this, GetType().GetMethod("HandleCommand", BindingFlags.NonPublic | BindingFlags.Instance))
             };
+        }
+
+        private void HandleCommand(CommandInfo cmdInfo)
+        {
+            if (!registeredCommands.TryGetValue(cmdInfo.Label.ToLowerInvariant(), out RegisteredCommand cmd))
+            {
+                return;
+            }
+
+            IPlayer iplayer = reignOfKingsCovalence.PlayerManager.FindPlayerById(cmdInfo.PlayerId.ToString()) ?? consolePlayer;
+            HandleChatMessage(iplayer, $"/{cmdInfo.Label} {string.Join(" ", cmdInfo.Args)}");
         }
 
         #endregion Command Registration
