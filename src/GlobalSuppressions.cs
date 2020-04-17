@@ -1,4 +1,4 @@
-﻿// This file is used by Code Analysis to maintain SuppressMessage
+// This file is used by Code Analysis to maintain SuppressMessage
 // attributes that are applied to this project.
 // Project-level suppressions either have no target or are given
 // a specific target and scoped to a namespace, type, member, etc.
@@ -6,7 +6,6 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~M:Oxide.Game.ReignOfKings.Libraries.Command.plugin_OnRemovedFromManager(Oxide.Core.Plugins.Plugin,Oxide.Core.Plugins.PluginManager)")]
-[assembly: SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>", Scope = "member", Target = "~M:Oxide.Game.ReignOfKings.Libraries.Command.HandleCommand(CodeHatch.Engine.Core.Commands.CommandInfo)")]
 [assembly: SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>", Scope = "member", Target = "~M:Oxide.Game.ReignOfKings.ReignOfKingsCore.Init")]
 [assembly: SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>", Scope = "member", Target = "~M:Oxide.Game.ReignOfKings.ReignOfKingsCore.IOnPlayerChat(CodeHatch.Networking.Events.Players.PlayerMessageEvent)~System.Object")]
 [assembly: SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>", Scope = "member", Target = "~M:Oxide.Game.ReignOfKings.ReignOfKingsCore.IOnPlayerConnected(CodeHatch.Engine.Networking.Player)")]
@@ -46,4 +45,3 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>", Scope = "member", Target = "~M:Oxide.Game.ReignOfKings.ReignOfKingsCore.ShowCommand(Oxide.Core.Libraries.Covalence.IPlayer,System.String,System.String[])")]
 [assembly: SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>", Scope = "member", Target = "~M:Oxide.Game.ReignOfKings.ReignOfKingsCore.UnloadCommand(Oxide.Core.Libraries.Covalence.IPlayer,System.String,System.String[])")]
 [assembly: SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>", Scope = "member", Target = "~M:Oxide.Game.ReignOfKings.ReignOfKingsCore.UserGroupCommand(Oxide.Core.Libraries.Covalence.IPlayer,System.String,System.String[])")]
-[assembly: SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>", Scope = "member", Target = "~M:Oxide.Game.ReignOfKings.Libraries.Covalence.ReignOfKingsCommandSystem.HandleCommand(CodeHatch.Engine.Core.Commands.CommandInfo)")]

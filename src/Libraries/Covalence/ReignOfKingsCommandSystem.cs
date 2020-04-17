@@ -158,7 +158,7 @@ namespace Oxide.Game.ReignOfKings.Libraries.Covalence
             registeredCommands[command] = newCommand;
             CommandManager.RegisteredCommands[command] = new CommandAttribute("/" + command, string.Empty)
             {
-                Method = (Action<CommandInfo>)Delegate.CreateDelegate(typeof(Action<CommandInfo>), this, GetType().GetMethod("HandleCommand", BindingFlags.NonPublic | BindingFlags.Instance))
+                Method = (Action<CommandInfo>)Delegate.CreateDelegate(typeof(Action<CommandInfo>), this, GetType().GetMethod(nameof(HandleCommand), BindingFlags.NonPublic | BindingFlags.Instance))
             };
         }
 
