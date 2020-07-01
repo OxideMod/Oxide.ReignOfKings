@@ -38,10 +38,8 @@ namespace Oxide.Game.ReignOfKings
             // Call out and see if we should reject
             object loginSpecific = Interface.Call("CanClientLogin", player);
             object loginCovalence = Interface.Call("CanUserLogin", player.Name, id, ip);
-            object canLogin = loginSpecific ?? loginCovalence; // TODO: Fix 'ReignOfKingsCore' hook conflict when both return
-
-            // Check if player can login
-            if (canLogin is string || canLogin is bool && !(bool)canLogin)
+            object canLogin = loginSpecific is null ? loginCovalence : loginSpecific;
+            if (canLogin is string || canLogin is bool loginBlocked && !loginBlocked)
             {
                 // Reject the player with the message
                 player.ShowPopup("Disconnected", canLogin is string ? canLogin.ToString() : "Connection was rejected"); // TODO: Localization
@@ -52,7 +50,7 @@ namespace Oxide.Game.ReignOfKings
             // Call the approval hooks
             object approvedSpecific = Interface.Call("OnUserApprove", player);
             object approvedCovalence = Interface.Call("OnUserApproved", player.Name, id, ip);
-            return approvedSpecific ?? approvedCovalence; // TODO: Fix 'ReignOfKingsCore' hook conflict when both return
+            return approvedSpecific is null ? approvedCovalence : approvedSpecific;
         }
 
         /// <summary>
@@ -69,7 +67,7 @@ namespace Oxide.Game.ReignOfKings
                 return null;
             }
 
-            // Call game and covalence hooks
+            // Call hooks for plugins
             object chatSpecific = Interface.Call("OnPlayerChat", evt);
             object chatCovalence = Interface.Call("OnUserChat", evt.Player.IPlayer, evt.Message);
             if (chatSpecific != null || chatCovalence != null)
@@ -85,51 +83,49 @@ namespace Oxide.Game.ReignOfKings
         /// <summary>
         /// Called when the player has connected
         /// </summary>
-        /// <param name="player"></param>
+        /// <param name="rokPlayer"></param>
         /// <returns></returns>
         [HookMethod("IOnPlayerConnected")]
-        private void IOnPlayerConnected(Player player)
+        private void IOnPlayerConnected(Player rokPlayer)
         {
             // Ignore the server player
-            if (player.Id == 9999999999)
+            if (rokPlayer.Id == 9999999999)
             {
                 return;
             }
 
-            // Update player's permissions group and name
+            string playerId = rokPlayer.Id.ToString();
+
+            // Update name and groups with permissions
             if (permission.IsLoaded)
             {
-                string id = player.Id.ToString();
-                permission.UpdateNickname(id, player.Name);
+                permission.UpdateNickname(playerId, rokPlayer.Name);
                 OxideConfig.DefaultGroups defaultGroups = Interface.Oxide.Config.Options.DefaultGroups;
-                if (!permission.UserHasGroup(id, defaultGroups.Players))
+                if (!permission.UserHasGroup(playerId, defaultGroups.Players))
                 {
-                    permission.AddUserGroup(id, defaultGroups.Players);
+                    permission.AddUserGroup(playerId, defaultGroups.Players);
                 }
-
-                if (player.HasPermission("admin") && !permission.UserHasGroup(id, defaultGroups.Administrators))
+                if (rokPlayer.HasPermission("admin") && !permission.UserHasGroup(playerId, defaultGroups.Administrators))
                 {
-                    permission.AddUserGroup(id, defaultGroups.Administrators);
+                    permission.AddUserGroup(playerId, defaultGroups.Administrators);
                 }
             }
 
-            // Let covalence know player connected
-            Covalence.PlayerManager.PlayerConnected(player);
+            // Let covalence know
+            Covalence.PlayerManager.PlayerConnected(rokPlayer);
 
             // Find covalence player
-            IPlayer iplayer = Covalence.PlayerManager.FindPlayerById(player.Id.ToString());
-            if (iplayer != null)
+            IPlayer player = Covalence.PlayerManager.FindPlayerById(playerId);
+            if (player != null)
             {
-                player.IPlayer = iplayer;
+                rokPlayer.IPlayer = player;
 
                 // Ignore the server player
-                if (player.Id != 9999999999)
+                if (rokPlayer.Id != 9999999999)
                 {
-                    // Call game-specific hook
-                    Interface.Call("OnPlayerConnected", player);
-
-                    // Call universal hook
-                    Interface.Call("OnUserConnected", iplayer);
+                    // Call hooks for plugins
+                    Interface.Call("OnPlayerConnected", rokPlayer);
+                    Interface.Call("OnUserConnected", player);
                 }
             }
         }
@@ -147,10 +143,8 @@ namespace Oxide.Game.ReignOfKings
                 return;
             }
 
-            // Call game-specific hook
+            // Call hooks for plugins
             Interface.Call("OnPlayerDisconnected", player);
-
-            // Call universal hook
             Interface.Call("OnUserDisconnected", player.IPlayer, lang.GetMessage("Unknown", this, player.IPlayer.Id));
 
             // Let covalence know
@@ -164,7 +158,7 @@ namespace Oxide.Game.ReignOfKings
         [HookMethod("OnPlayerSpawn")]
         private void OnPlayerSpawn(PlayerFirstSpawnEvent evt)
         {
-            // Call universal hook
+            // Call hooks for plugins
             Interface.Call("OnUserSpawn", evt.Player.IPlayer);
         }
 
@@ -175,7 +169,7 @@ namespace Oxide.Game.ReignOfKings
         [HookMethod("OnPlayerSpawned")]
         private void OnPlayerSpawned(PlayerPreSpawnCompleteEvent evt)
         {
-            // Call universal hook
+            // Call hooks for plugins
             Interface.Call("OnUserSpawned", evt.Player.IPlayer);
         }
 
@@ -186,10 +180,69 @@ namespace Oxide.Game.ReignOfKings
         [HookMethod("OnPlayerRespawn")] // Not being called every time?
         private void OnPlayerRespawn(PlayerRespawnEvent evt)
         {
-            // Call universal hook
+            // Call hooks for plugins
             Interface.Call("OnUserRespawn", evt.Player.IPlayer);
         }
 
         #endregion Player Hooks
+
+        #region Server Hooks
+
+        [HookMethod("IOnServerCommand")]
+        private object IOnServerCommand(ulong playerId, string str)
+        {
+            if (str.Length == 0)
+            {
+                return null;
+            }
+
+            // Get the full command
+            string message = str.TrimStart('/');
+
+            // Parse the command
+            ParseCommand(message, out string cmd, out string[] args);
+            if (cmd == null)
+            {
+                return null;
+            }
+
+            if (Interface.Call("OnServerCommand", cmd, args) != null)
+            {
+                return true;
+            }
+
+            // Check if command is from a player
+            Player rokPlayer = CodeHatch.Engine.Networking.Server.GetPlayerById(playerId);
+            if (rokPlayer == null)
+            {
+                return null;
+            }
+
+            // Get the covalence player
+            IPlayer player = Covalence.PlayerManager.FindPlayerById(playerId.ToString());
+            if (player == null)
+            {
+                return null;
+            }
+
+            // Is the command blocked?
+            object commandSpecific = Interface.Call("OnPlayerCommand", rokPlayer, cmd, args);
+            object commandCovalence = Interface.Call("OnUserCommand", player, cmd, args);
+            object canBlock = commandSpecific is null ? commandCovalence : commandSpecific;
+            if (canBlock is bool commandBlocked && !commandBlocked)
+            {
+                return true;
+            }
+
+            // Is it a valid chat command?
+            if (str[0] == '/' && Covalence.CommandSystem.HandleChatMessage(player, str) || cmdlib.HandleChatCommand(rokPlayer, cmd, args))
+            {
+                return true;
+            }
+
+            return null;
+        }
+
+        #endregion Server Hooks
     }
 }

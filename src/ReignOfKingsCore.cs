@@ -1,5 +1,4 @@
 ﻿using CodeHatch.Engine.Core.Commands;
-using CodeHatch.Engine.Networking;
 using CodeHatch.Permissions;
 using Oxide.Core;
 using Oxide.Core.Libraries;
@@ -52,12 +51,14 @@ namespace Oxide.Game.ReignOfKings
 
         // Libraries
         internal readonly Command cmdlib = Interface.Oxide.GetLibrary<Command>();
+
         internal readonly Lang lang = Interface.Oxide.GetLibrary<Lang>();
         internal readonly Permission permission = Interface.Oxide.GetLibrary<Permission>();
         //internal readonly Player Player = Interface.Oxide.GetLibrary<Player>();
 
         // Instances
         internal static readonly ReignOfKingsCovalenceProvider Covalence = ReignOfKingsCovalenceProvider.Instance;
+
         internal readonly PluginManager pluginManager = Interface.Oxide.RootPluginManager;
         internal readonly IServer Server = Covalence.CreateServer();
 
@@ -247,72 +248,6 @@ namespace Oxide.Game.ReignOfKings
             cmd = arglist[0];
             arglist.RemoveAt(0);
             args = arglist.ToArray();
-        }
-
-        [HookMethod("IOnServerCommand")]
-        private object IOnServerCommand(ulong id, string str)
-        {
-            if (str.Length == 0)
-            {
-                return null;
-            }
-
-            // Get the full command
-            string message = str.TrimStart('/');
-
-            // Parse it
-            ParseCommand(message, out string cmd, out string[] args);
-            if (cmd == null)
-            {
-                return null;
-            }
-
-            if (Interface.Call("OnServerCommand", cmd, args) != null)
-            {
-                return true;
-            }
-
-            // Check if command is from the player
-            Player player = CodeHatch.Engine.Networking.Server.GetPlayerById(id);
-            if (player == null)
-            {
-                return null;
-            }
-
-            // Get the covalence player
-            IPlayer iplayer = Covalence.PlayerManager.FindPlayerById(id.ToString());
-            if (iplayer == null)
-            {
-                return null;
-            }
-
-            // Is the command blocked?
-            object blockedSpecific = Interface.Call("OnPlayerCommand", player, cmd, args);
-            object blockedCovalence = Interface.Call("OnUserCommand", iplayer, cmd, args);
-            if (blockedSpecific != null || blockedCovalence != null)
-            {
-                return true;
-            }
-
-            // Is it a chat command?
-            if (str[0] != '/')
-            {
-                return null;
-            }
-
-            // Is it a covalance command?
-            if (Covalence.CommandSystem.HandleChatMessage(iplayer, str))
-            {
-                return true;
-            }
-
-            // Is it a regular chat command?
-            if (cmdlib.HandleChatCommand(player, cmd, args))
-            {
-                return true;
-            }
-
-            return null;
         }
 
         #endregion Command Handling
