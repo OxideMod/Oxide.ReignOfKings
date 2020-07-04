@@ -70,7 +70,8 @@ namespace Oxide.Game.ReignOfKings
             // Call hooks for plugins
             object chatSpecific = Interface.Call("OnPlayerChat", evt);
             object chatCovalence = Interface.Call("OnUserChat", evt.Player.IPlayer, evt.Message);
-            if (chatSpecific != null || chatCovalence != null)
+            object canChat = chatSpecific is null ? chatCovalence : chatSpecific;
+            if (canChat != null)
             {
                 // Cancel chat message event
                 evt.Cancel();
@@ -206,21 +207,18 @@ namespace Oxide.Game.ReignOfKings
                 return null;
             }
 
-            if (Interface.Call("OnServerCommand", cmd, args) != null)
+            // Get the player object
+            Player rokPlayer = CodeHatch.Engine.Networking.Server.GetPlayerById(playerId);
+
+            // Is the command blocked?
+            if (rokPlayer == null && Interface.Call("OnServerCommand", cmd, args) != null)
             {
                 return true;
             }
 
             // Check if command is from a player
-            Player rokPlayer = CodeHatch.Engine.Networking.Server.GetPlayerById(playerId);
-            if (rokPlayer == null)
-            {
-                return null;
-            }
-
-            // Get the covalence player
             IPlayer player = Covalence.PlayerManager.FindPlayerById(playerId.ToString());
-            if (player == null)
+            if (player == null || rokPlayer == null)
             {
                 return null;
             }
@@ -229,7 +227,7 @@ namespace Oxide.Game.ReignOfKings
             object commandSpecific = Interface.Call("OnPlayerCommand", rokPlayer, cmd, args);
             object commandCovalence = Interface.Call("OnUserCommand", player, cmd, args);
             object canBlock = commandSpecific is null ? commandCovalence : commandSpecific;
-            if (canBlock is bool commandBlocked && !commandBlocked)
+            if (canBlock != null)
             {
                 return true;
             }
