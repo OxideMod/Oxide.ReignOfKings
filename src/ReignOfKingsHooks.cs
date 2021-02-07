@@ -1,4 +1,4 @@
-﻿using CodeHatch.Common;
+using CodeHatch.Common;
 using CodeHatch.Engine.Networking;
 using CodeHatch.Networking.Events.Players;
 using Oxide.Core;
@@ -207,16 +207,14 @@ namespace Oxide.Game.ReignOfKings
                 return null;
             }
 
-            // Get the player object
-            Player rokPlayer = CodeHatch.Engine.Networking.Server.GetPlayerById(playerId);
-
             // Is the command blocked?
-            if (rokPlayer == null && Interface.Call("OnServerCommand", cmd, args) != null)
+            if (Interface.Call("OnServerCommand", cmd, args) != null)
             {
                 return true;
             }
 
             // Check if command is from a player
+            Player rokPlayer = CodeHatch.Engine.Networking.Server.GetPlayerById(playerId);
             IPlayer player = Covalence.PlayerManager.FindPlayerById(playerId.ToString());
             if (player == null || rokPlayer == null)
             {
