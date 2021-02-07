@@ -1,10 +1,12 @@
-using CodeHatch.Common;
+﻿using CodeHatch.Common;
 using CodeHatch.Engine.Networking;
+using CodeHatch.Engine.Networking.Events;
 using CodeHatch.Networking.Events.Players;
 using Oxide.Core;
 using Oxide.Core.Configuration;
 using Oxide.Core.Libraries.Covalence;
 using Oxide.Core.Plugins;
+using uLink;
 
 namespace Oxide.Game.ReignOfKings
 {
@@ -21,35 +23,34 @@ namespace Oxide.Game.ReignOfKings
         /// <param name="player"></param>
         /// <returns></returns>
         [HookMethod("IOnUserApprove")]
-        private object IOnUserApprove(Player player)
+        private object IOnUserApprove(ConnectionRequestEvent evt)
         {
-            // Ignore the server player
-            if (player.Id == 9999999999)
+            // Ignore the server
+            if (evt.Connection != null && evt.Connection.IsServer)
             {
                 return null;
             }
 
-            string id = player.Id.ToString();
-            string ip = player.Connection.IpAddress;
+            string playerId = evt.Request.LoginData.PlayerId.ToString();
+            string playerName = evt.Request.LoginData.PlayerName;
+            string playerIp = evt.Request.IpAddress;
 
             // Let covalence know player is joining
-            Covalence.PlayerManager.PlayerJoin(player.Id, player.Name); // TODO: Handle this automatically
+            Covalence.PlayerManager.PlayerJoin(evt.Request.LoginData.PlayerId, playerName); // TODO: Handle this automatically
 
             // Call out and see if we should reject
-            object loginSpecific = Interface.Call("CanClientLogin", player);
-            object loginCovalence = Interface.Call("CanUserLogin", player.Name, id, ip);
+            object loginSpecific = Interface.Call("CanClientLogin", evt);
+            object loginCovalence = Interface.Call("CanUserLogin", playerName, playerId, playerIp);
             object canLogin = loginSpecific is null ? loginCovalence : loginSpecific;
             if (canLogin is string || canLogin is bool loginBlocked && !loginBlocked)
             {
                 // Reject the player with the message
-                player.ShowPopup("Disconnected", canLogin is string ? canLogin.ToString() : "Connection was rejected"); // TODO: Localization
-                player.Connection.Close();
-                return ConnectionError.NoError;
+                return NetworkConnectionError.ApprovalDenied;
             }
 
             // Call the approval hooks
-            object approvedSpecific = Interface.Call("OnUserApprove", player);
-            object approvedCovalence = Interface.Call("OnUserApproved", player.Name, id, ip);
+            object approvedSpecific = Interface.Call("OnUserApprove", evt);
+            object approvedCovalence = Interface.Call("OnUserApproved", playerName, playerId, playerIp);
             return approvedSpecific is null ? approvedCovalence : approvedSpecific;
         }
 
