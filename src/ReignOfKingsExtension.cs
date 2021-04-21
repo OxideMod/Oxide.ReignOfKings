@@ -338,7 +338,10 @@ namespace Oxide.Game.ReignOfKings
                 remoteType = "error";
             }
 
-            Interface.Oxide.ServerConsole.AddMessage(message, color);
+            if (Interface.Oxide.ServerConsole != null)
+            {
+                Interface.Oxide.ServerConsole.AddMessage(message, color);
+            }
             Interface.Oxide.RemoteConsole.SendMessage(new RemoteMessage
             {
                 Message = message,
